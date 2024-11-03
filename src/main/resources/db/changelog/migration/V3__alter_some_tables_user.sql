@@ -1,0 +1,4 @@
+ALTER TABLE `users`
+    MODIFY COLUMN `phone_number` VARCHAR(15),
+    MODIFY COLUMN `password` CHAR(60) NOT NULL,
+    MODIFY COLUMN `role_id` INT DEFAULT 1;
