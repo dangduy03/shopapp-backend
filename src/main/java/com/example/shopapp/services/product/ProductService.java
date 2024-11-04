@@ -33,11 +33,17 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ProductService implements IProductService{
+	
     private final ProductRepository productRepository;
+    
     private final UserRepository userRepository;
+    
     private final CategoryRepository categoryRepository;
+    
     private final ProductImageRepository productImageRepository;
+    
     private final FavoriteRepository favoriteRepository;
+    
     @Override
     @Transactional
     public Product createProduct(ProductDTO productDTO) throws DataNotFoundException {
@@ -65,6 +71,7 @@ public class ProductService implements IProductService{
         }
         throw new DataNotFoundException("Cannot find product with id =" + productId);
     }
+    
     @Override
     public List<Product> findProductsByIds(List<Long> productIds) {
         return productRepository.findProductsByIds(productIds);
@@ -79,6 +86,7 @@ public class ProductService implements IProductService{
         productsPage = productRepository.searchProducts(keyword, categoryId, pageRequest);
         return productsPage.map(ProductResponse::fromProduct);
     }
+    
     @Override
     @Transactional
     public Product updateProduct(
@@ -178,6 +186,7 @@ public class ProductService implements IProductService{
         // Return the liked product
         return productRepository.findById(productId).orElse(null);
     }
+    
     @Override
     @Transactional
     public Product unlikeProduct(Long userId, Long productId) throws Exception {
@@ -193,6 +202,7 @@ public class ProductService implements IProductService{
         }
         return productRepository.findById(productId).orElse(null);
     }
+    
     @Override
     @Transactional
     public List<ProductResponse> findFavoriteProductsByUserId(Long userId) throws Exception {
@@ -208,6 +218,7 @@ public class ProductService implements IProductService{
                 .map(ProductResponse::fromProduct)
                 .collect(Collectors.toList());
     }
+    
     @Override
     //@Transactional
     public void generateFakeLikes() throws Exception {

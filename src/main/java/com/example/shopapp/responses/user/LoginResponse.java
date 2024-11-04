@@ -17,6 +17,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginResponse {
+	
     @JsonProperty("message")
     private String message;
 

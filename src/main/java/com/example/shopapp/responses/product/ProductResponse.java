@@ -27,6 +27,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductResponse extends BaseResponse {
+	
     private Long id;
     
     private String name;
@@ -51,6 +52,7 @@ public class ProductResponse extends BaseResponse {
 
     @JsonProperty("category_id")
     private Long categoryId;
+    
     public static ProductResponse fromProduct(Product product) {
         List<Comment> comments = product.getComments()
                 .stream()
@@ -58,6 +60,7 @@ public class ProductResponse extends BaseResponse {
                 .collect(Collectors.toList());
         
         List<Favorite> favorites = product.getFavorites();
+        
         ProductResponse productResponse = ProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
@@ -70,6 +73,7 @@ public class ProductResponse extends BaseResponse {
                 .productImages(product.getProductImages())
                 .totalPages(0)
                 .build();
+        
         productResponse.setCreatedAt(product.getCreatedAt());
         productResponse.setUpdatedAt(product.getUpdatedAt());
         return productResponse;

@@ -27,24 +27,9 @@ public class FileUtils {
             //throw new FileNotFoundException("File not found: " + filename);
         }
     }
+    
     public static boolean isImageFile(MultipartFile file) {
         return true;
-        /*
-        String contentType = file.getContentType();
-        return contentType != null && contentType.startsWith("image/");
-         */
-        /*
-        AutoDetectParser parser = new AutoDetectParser();
-        Detector detector = parser.getDetector();
-        try {
-            Metadata metadata = new Metadata();
-            TikaInputStream stream = TikaInputStream.get(file.getInputStream());
-            MediaType mediaType = detector.detect(stream, metadata);
-            String mimeType =  mediaType.toString();
-        } catch (IOException e) {
-            return false;
-        }
-        */
     }
 
     public static String storeFile(MultipartFile file) throws IOException {

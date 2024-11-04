@@ -15,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDetailResponse {
+	
     private Long id;
 
     @JsonProperty("order_id")

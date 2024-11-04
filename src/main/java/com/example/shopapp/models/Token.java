@@ -22,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "tokens")
 public class Token {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,6 +46,7 @@ public class Token {
     private boolean isMobile;
 
     private boolean revoked;
+    
     private boolean expired;
 
 

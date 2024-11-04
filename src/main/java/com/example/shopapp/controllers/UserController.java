@@ -59,75 +59,6 @@ import org.springframework.util.StringUtils;
 @RestController
 @RequestMapping("${api.prefix}/users")
 @RequiredArgsConstructor
-//public class UserController {
-//	private final IUserService userService;
-//    private final LocalizationUtils localizationUtils;
-//
-//    @PostMapping("/register")
-//    //can we register an "admin" user ?
-//    public ResponseEntity<RegisterResponse> createUser(
-//            @Valid @RequestBody UserDTO userDTO,
-//            BindingResult result
-//    ) {
-//        RegisterResponse registerResponse = new RegisterResponse();
-//
-//        if (result.hasErrors()) {
-//            List<String> errorMessages = result.getFieldErrors()
-//                    .stream()
-//                    .map(FieldError::getDefaultMessage)
-//                    .toList();
-//
-//            registerResponse.setMessage(errorMessages.toString());
-//            return ResponseEntity.badRequest().body(registerResponse);
-//        }
-//
-//        if (!userDTO.getPassword().equals(userDTO.getRetypePassword())) {
-//            registerResponse.setMessage(localizationUtils.getLocalizedMessage(MessageKeys.PASSWORD_NOT_MACTH));
-//            return ResponseEntity.badRequest().body(registerResponse);
-//        }
-//
-//        try {
-//            User user = userService.createUser(userDTO);
-//            registerResponse.setMessage(localizationUtils.getLocalizedMessage(MessageKeys.REGISTER_SUCCESSFULLY));
-//            registerResponse.setUser(user);
-//            return ResponseEntity.ok(registerResponse);
-//        } catch (Exception e) {
-//            registerResponse.setMessage(e.getMessage());
-//            return ResponseEntity.badRequest().body(registerResponse);
-//        }
-//    }
-//
-//    /*
-//    Thêm tk admin
-//    * */
-//
-//    @PostMapping("/login")
-//    public ResponseEntity<LoginResponse> login(
-//            @Valid @RequestBody UserLoginDTO userLoginDTO
-//    ) {
-//        // Kiểm tra thông tin đăng nhập và sinh token
-//        try {   
-//        	System.out.println("Phone: " +userLoginDTO.getPhoneNumber());
-//        	System.out.println("Password: "+ userLoginDTO.getPassword());
-//            String token = userService.login(
-//                    userLoginDTO.getPhoneNumber(),
-//                    userLoginDTO.getPassword(),
-//                    userLoginDTO.getRoleId() == null ? 1 : userLoginDTO.getRoleId()
-//            );
-//            // Trả về token trong response
-//            return ResponseEntity.ok(LoginResponse.builder()
-//                            .message(localizationUtils.getLocalizedMessage(MessageKeys.LOGIN_SUCCESSFULLY))
-//                            .token(token)
-//                    .build());
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(
-//                    LoginResponse.builder()
-//                            .message(localizationUtils.getLocalizedMessage(MessageKeys.LOGIN_FAILED, e.getMessage()))
-//                            .build()
-//            );
-//        }
-//    }
-//}
 
 public class UserController {
     private final IUserService userService;
@@ -172,6 +103,7 @@ public class UserController {
                         .data(userListResponse)
                 .build());
     }
+    
     @PostMapping("/register")
     //can we register an "admin" user ?
     public ResponseEntity<ResponseObject> createUser(
@@ -251,8 +183,9 @@ public class UserController {
                         .message("Login successfully")
                         .data(loginResponse)
                         .status(HttpStatus.OK)
-                .build());
+                        .build());
     }
+    
     @PostMapping("/refreshToken")
     public ResponseEntity<ResponseObject> refreshToken(
             @Valid @RequestBody RefreshTokenDTO refreshTokenDTO
@@ -275,11 +208,13 @@ public class UserController {
                         .build());
 
     }
+    
     private boolean isMobileDevice(String userAgent) {
         // Kiểm tra User-Agent header để xác định thiết bị di động
         // Ví dụ đơn giản:
         return userAgent.toLowerCase().contains("mobile");
     }
+    
     @PostMapping("/details")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> getUserDetails(
@@ -295,6 +230,7 @@ public class UserController {
                         .build()
         );
     }
+    
     @PutMapping("/details/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
@@ -318,6 +254,7 @@ public class UserController {
                         .build()
         );
     }
+    
     @PutMapping("/reset-password/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseObject> resetPassword(@Valid @PathVariable long userId){
@@ -343,6 +280,7 @@ public class UserController {
                     .build());
         }
     }
+    
     @PutMapping("/block/{userId}/{active}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseObject> blockOrEnable(
@@ -398,13 +336,14 @@ public class UserController {
         if (!StringUtils.isEmpty(oldFileName)) {
             FileUtils.deleteFile(oldFileName);
         }
-//1aba82e1-4599-4c8b-8ec5-9c16e5aad379_3734888057500.png
+
         return ResponseEntity.ok().body(ResponseObject.builder()
                 .message("Upload profile image successfully")
                 .status(HttpStatus.CREATED)
                 .data(imageName) // Return the filename or image URL
                 .build());
     }
+    
     @GetMapping("/profile-images/{imageName}")
     public ResponseEntity<?> viewImage(@PathVariable String imageName) {
         try {

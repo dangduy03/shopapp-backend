@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 public class UserListResponse {
+	
     private List<UserResponse> users;
     
     private int totalPages;

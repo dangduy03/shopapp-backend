@@ -26,8 +26,11 @@ import com.example.shopapp.utils.MessageKeys;
 @RequestMapping("${api.prefix}/categories")
 //@Validated
 public class CategoryController {
+	
     private final CategoryService categoryService;
+    
     private final LocalizationUtils localizationUtils;
+    
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @PostMapping("")
@@ -65,12 +68,7 @@ public class CategoryController {
             @RequestParam("limit")    int limit
     ) {
         List<Category> categories = categoryService.getAllCategories();
-        /*
-        this.kafkaTemplate.executeInTransaction(status -> {
-            categories.forEach(category -> kafkaTemplate.send("get-all-categories", category));
-            return null;
-        });
-         */
+
         this.kafkaTemplate.send("get-all-categories", categories);
         return ResponseEntity.ok(ResponseObject.builder()
                         .message("Get list of categories successfully")

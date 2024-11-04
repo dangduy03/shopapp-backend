@@ -8,6 +8,7 @@ import com.example.shopapp.models.Comment;
 import com.example.shopapp.responses.comment.CommentResponse;
 
 public interface ICommentService {
+	
     Comment insertComment(CommentDTO comment);
 
     void deleteComment(Long commentId);

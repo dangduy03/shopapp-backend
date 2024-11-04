@@ -10,6 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class UpdateUserDTO extends SocialAccountDTO {
+	
     @JsonProperty("fullname")
     private String fullName;
 

@@ -11,6 +11,7 @@ import org.apache.kafka.clients.admin.NewTopic;
 @Configuration
 //@EnableKafka(autostartup=false)
 public class KafkaConfiguration {
+	
     @Bean
     public CommonErrorHandler errorHandler(KafkaOperations<Object, Object> template) {
         return new DefaultErrorHandler(

@@ -8,6 +8,7 @@ import com.example.shopapp.responses.ResponseObject;
 
 @RestControllerAdvice // Chỉ định lớp này xử lý ngoại lệ chung
 public class GlobalExceptionHandler {
+	
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ResponseObject> handleGeneralException(Exception exception) {

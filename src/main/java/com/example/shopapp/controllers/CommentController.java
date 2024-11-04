@@ -23,7 +23,9 @@ import java.util.Objects;
 //Dependency Injection
 @RequiredArgsConstructor
 public class CommentController {
+	
     private final CommentService commentService;
+    
     private final SecurityUtils securityUtils;
 
     @GetMapping("")
@@ -43,6 +45,7 @@ public class CommentController {
                 .data(commentResponses)
                 .build());
     }
+    
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> updateComment(
@@ -56,14 +59,15 @@ public class CommentController {
                             "You cannot update another user's comment",
                             HttpStatus.BAD_REQUEST,
                             null));
-
         }
+        
         commentService.updateComment(commentId, commentDTO);
         return ResponseEntity.ok(
                 new ResponseObject(
                         "Update comment successfully",
                         HttpStatus.OK, null));
     }
+    
     @PostMapping("")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> insertComment(
@@ -85,6 +89,7 @@ public class CommentController {
                         .status(HttpStatus.OK)
                         .build());
     }
+    
     @PostMapping("/generateFakeComments")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseObject> generateFakeComments() throws Exception {

@@ -43,6 +43,7 @@ ALTER TABLE users
   MODIFY google_account_id VARCHAR(255);
 * */
 public class User extends BaseEntity implements UserDetails, OAuth2User {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -88,9 +89,9 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
         authorityList.add(new SimpleGrantedAuthority("ROLE_"+getRole().getName().toUpperCase()));
         //authorityList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-
         return authorityList;
     }
+    
     @Override
     public String getUsername() {
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
@@ -127,10 +128,12 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
     public Map<String, Object> getAttributes() {
         return new HashMap<String, Object>();
     }
+    
     @Override
     public String getName() {
         return getAttribute("name");
     }
+    
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 
     @JsonManagedReference

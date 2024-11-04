@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryDTO {
+	
 	@NotEmpty(message = "Category's name cannot be emty")
 	private String name;
 }

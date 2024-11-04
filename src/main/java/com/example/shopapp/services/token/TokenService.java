@@ -19,7 +19,9 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class TokenService implements ITokenService{
+	
     private static final int MAX_TOKENS = 3;
+    
     @Value("${jwt.expiration-time}")
     private int expiration; //save to an environment variable
 
@@ -49,6 +51,7 @@ public class TokenService implements ITokenService{
         existingToken.setRefreshExpirationDate(LocalDateTime.now().plusSeconds(expirationRefreshToken));
         return existingToken;
     }
+    
     @Transactional
     @Override
     public Token addToken(User user,String token, boolean isMobileDevice) {

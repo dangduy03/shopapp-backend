@@ -71,6 +71,7 @@ public class OrderController {
                         .status(HttpStatus.OK)
                         .build());
     }
+    
     @GetMapping("/user/{user_id}") // Thêm biến đường dẫn "user_id"
     //GET http://localhost:8088/api/v1/orders/user/4
     public ResponseEntity<ResponseObject> getOrders(@Valid @PathVariable("user_id") Long userId) {
@@ -84,6 +85,7 @@ public class OrderController {
                         .status(HttpStatus.OK)
                         .build());
     }
+    
     //GET http://localhost:8088/api/v1/orders/2
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getOrder(@Valid @PathVariable("id") Long orderId) {
@@ -95,6 +97,7 @@ public class OrderController {
                     orderResponse
                 ));
     }
+    
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     //PUT http://localhost:8088/api/v1/orders/2
@@ -153,6 +156,7 @@ public class OrderController {
                         order)
         );
     }
+    
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseObject> deleteOrder(@Valid @PathVariable Long id) {
@@ -166,6 +170,7 @@ public class OrderController {
                         .build()
         );
     }
+    
     @GetMapping("/get-orders-by-keyword")
     public ResponseEntity<ResponseObject> getOrdersByKeyword(
             @RequestParam(defaultValue = "", required = false) String keyword,

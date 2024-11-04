@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class RefreshTokenDTO {
+	
     @NotBlank
     private String refreshToken;
 }
