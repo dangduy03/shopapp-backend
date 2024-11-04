@@ -19,10 +19,13 @@ import java.net.InetAddress;
 @RequestMapping("${api.prefix}/healthcheck")
 @AllArgsConstructor
 public class HealthCheckController {
+	
     private final CategoryService categoryService;
+    
     @GetMapping("/health")
     public ResponseEntity<ResponseObject> healthCheck() throws Exception{
         List<Category> categories = categoryService.getAllCategories();
+        
         // Get the computer name
         String computerName = InetAddress.getLocalHost().getHostName();
         return ResponseEntity.ok(ResponseObject

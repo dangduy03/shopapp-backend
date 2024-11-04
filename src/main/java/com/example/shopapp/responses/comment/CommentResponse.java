@@ -13,6 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class CommentResponse extends BaseResponse {
+	
     @JsonProperty("id")
     private Long id;
 

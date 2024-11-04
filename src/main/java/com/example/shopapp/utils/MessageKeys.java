@@ -1,6 +1,7 @@
 package com.example.shopapp.utils;
 
 public class MessageKeys {
+	
 	public static final String LOGIN_SUCCESSFULLY = "user.login.login_successfully";
 	
 	public static final String REGISTER_SUCCESSFULLY= "user.login.register_successfully";

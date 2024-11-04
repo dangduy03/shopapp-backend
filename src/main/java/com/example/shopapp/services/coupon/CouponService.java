@@ -15,8 +15,11 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Service
 public class CouponService implements ICouponService{
+	
     private final CouponRepository couponRepository;
+    
     private final CouponConditionRepository couponConditionRepository;
+    
     @Override
     public double calculateCouponValue(String couponCode, double totalAmount) {
         Coupon coupon = couponRepository.findByCode(couponCode)

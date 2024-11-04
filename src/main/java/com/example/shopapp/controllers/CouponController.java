@@ -24,10 +24,13 @@ public class CouponController {
     public ResponseEntity<ResponseObject> calculateCouponValue(
             @RequestParam("couponCode") String couponCode,
             @RequestParam("totalAmount") double totalAmount) {
+    	
         double finalAmount = couponService.calculateCouponValue(couponCode, totalAmount);
+        
         CouponCalculationResponse couponCalculationResponse = CouponCalculationResponse.builder()
                 .result(finalAmount)
                 .build();
+        
         return ResponseEntity.ok(new ResponseObject(
                 "Calculate coupon successfully",
                 HttpStatus.OK,

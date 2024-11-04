@@ -69,7 +69,6 @@ public class JwtTokenUtils {
 
 	private SecretKey getSignInKey() {
 		byte[] bytes = Decoders.BASE64.decode(secretKey);
-		// Keys.hmacShaKeyFor(Decoders.BASE64.decode("TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI="));
 		return Keys.hmacShaKeyFor(bytes);
 	}
 
@@ -80,13 +79,6 @@ public class JwtTokenUtils {
 		String secretKey = Encoders.BASE64.encode(keyBytes);
 		return secretKey;
 	}
-//    private Claims extractAllClaims(String token) {
-//        return Jwts.parser()  // Khởi tạo JwtParserBuilder
-//                .verifyWith(getSignInKey())  // Sử dụng verifyWith() để thiết lập signing key
-//                .build()  // Xây dựng JwtParser
-//                .parseSignedClaims(token)  // Phân tích token đã ký
-//                .getPayload();  // Lấy phần body của JWT, chứa claims
-//    }
 
 	private Claims extractAllClaims(String token) {
 		return Jwts.parserBuilder() // Khởi tạo JwtParserBuilder

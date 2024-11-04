@@ -16,8 +16,11 @@ Implement a Spring Boot application that subscribes to the Kafka Connect destina
 * */
 @AllArgsConstructor
 public class ProductListener {
+	
     private final IProductRedisService productRedisService;
+    
     private static final Logger logger = LoggerFactory.getLogger(ProductListener.class);
+    
     @PrePersist
     public void prePersist(Product product) {
         logger.info("prePersist");
@@ -32,7 +35,6 @@ public class ProductListener {
 
     @PreUpdate
     public void preUpdate(Product product) {
-        //ApplicationEventPublisher.instance().publishEvent(event);
         logger.info("preUpdate");
     }
 
@@ -45,7 +47,6 @@ public class ProductListener {
 
     @PreRemove
     public void preRemove(Product product) {
-        //ApplicationEventPublisher.instance().publishEvent(event);
         logger.info("preRemove");
     }
 

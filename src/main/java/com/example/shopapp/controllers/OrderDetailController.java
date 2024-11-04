@@ -25,8 +25,11 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("${api.prefix}/order_details")
 @RequiredArgsConstructor
 public class OrderDetailController {
+	
     private final OrderDetailService orderDetailService;
+    
     private final LocalizationUtils localizationUtils;
+    
     //Thêm mới 1 order detail
     @PostMapping("")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
@@ -42,6 +45,8 @@ public class OrderDetailController {
                         .build()
         );
     }
+    
+    
     @GetMapping("/{id}")
     public ResponseEntity<?> getOrderDetail(
             @Valid @PathVariable("id") Long id) throws DataNotFoundException {
@@ -55,6 +60,7 @@ public class OrderDetailController {
                         .build()
         );
     }
+    
     //lấy ra danh sách các order_details của 1 order nào đó
     @GetMapping("/order/{orderId}")
     public ResponseEntity<ResponseObject> getOrderDetails(
@@ -73,6 +79,7 @@ public class OrderDetailController {
                         .build()
         );
     }
+    
     @PutMapping("/{id}")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
@@ -85,8 +92,9 @@ public class OrderDetailController {
                         .data(orderDetail)
                         .message("Update order detail successfully")
                         .status(HttpStatus.OK)
-                .build());
+                        .build());
     }
+    
     @DeleteMapping("/{id}")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")

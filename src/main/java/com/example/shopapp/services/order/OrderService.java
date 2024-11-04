@@ -34,10 +34,15 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class OrderService implements IOrderService{
+	
     private final UserRepository userRepository;
+    
     private final OrderRepository orderRepository;
+    
     private final ProductRepository productRepository;
+    
     private final CouponRepository couponRepository;
+    
     private final OrderDetailRepository orderDetailRepository;
 
     private final ModelMapper modelMapper;
@@ -63,6 +68,7 @@ public class OrderService implements IOrderService{
         //Kiểm tra shipping date phải >= ngày hôm nay
         LocalDate shippingDate = orderDTO.getShippingDate() == null
                 ? LocalDate.now() : orderDTO.getShippingDate();
+        
         if (shippingDate.isBefore(LocalDate.now())) {
             throw new DataNotFoundException("Date must be at least today !");
         }
@@ -114,6 +120,7 @@ public class OrderService implements IOrderService{
         orderRepository.save(order);
         return order;
     }
+    
     @Transactional
     public Order updateOrderWithDetails(OrderWithDetailsDTO orderWithDetailsDTO) {
         modelMapper.typeMap(OrderWithDetailsDTO.class, Order.class)
@@ -135,6 +142,7 @@ public class OrderService implements IOrderService{
 
         return savedOrder;
     }
+    
     @Override
     public Order getOrderById(Long orderId) {
         Order selectedOrder = orderRepository.findById(orderId).orElse(null);
@@ -220,6 +228,7 @@ public class OrderService implements IOrderService{
             orderRepository.save(order);
         }
     }
+    
     @Override
     public List<OrderResponse> findByUserId(Long userId) {
         List<Order> orders = orderRepository.findByUserId(userId);

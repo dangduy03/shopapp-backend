@@ -16,6 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProductRedisService implements IProductRedisService{
+	
     private final RedisTemplate<String, Object> redisTemplate;
     
     private final ObjectMapper redisObjectMapper;

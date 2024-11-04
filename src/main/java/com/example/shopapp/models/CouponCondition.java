@@ -15,6 +15,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class CouponCondition {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

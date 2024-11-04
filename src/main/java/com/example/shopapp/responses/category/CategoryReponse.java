@@ -17,6 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class CategoryReponse {
+	
     @JsonProperty("message")
     private String message;
 

@@ -20,10 +20,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @CrossOrigin("*")
 public class RoleController {
+	
     private final RoleService roleService;
+    
     @GetMapping("")
     public ResponseEntity<ResponseObject> getAllRoles() {
         List<Role> roles = roleService.getAllRoles();
+        
         return ResponseEntity.ok().body(ResponseObject.builder()
                         .message("Get roles successfully")
                         .status(HttpStatus.OK)

@@ -21,13 +21,7 @@ public class LocalizationUtils {
 	
 	public String getLocalizedMessage(String messageKey, Object... params) {//spread operator
 		HttpServletRequest request = WebUtils.getCurrentRequest();
-//		Locale locale = Locale.ENGLISH;
-//		if (request == null) {
-//	        System.out.println("HttpServletRequest is null!");
-//	    }
-	    Locale locale = localeResolver.resolveLocale(request);
-//	    System.out.println("Locale: " + locale);
-	    
+	    Locale locale = localeResolver.resolveLocale(request);    
 		return messageSource.getMessage(messageKey, params, locale);
 	}
 }

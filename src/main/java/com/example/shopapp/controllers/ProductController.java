@@ -51,9 +51,13 @@ import lombok.RequiredArgsConstructor;
 public class ProductController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+	
     private final IProductService productService;
+    
     private final LocalizationUtils localizationUtils;
+    
     private final IProductRedisService productRedisService;
+    
     private final SecurityUtils securityUtils;
 	
 

@@ -13,6 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class UserResponse {
+	
     @JsonProperty("id")
     private Long id;
 

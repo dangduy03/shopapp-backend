@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @NoArgsConstructor
 @Builder
 public class CouponCalculationResponse {
+	
     @JsonProperty("result")
     private Double result;
 }

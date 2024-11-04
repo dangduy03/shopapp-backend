@@ -12,6 +12,7 @@ import com.example.shopapp.models.ProductImage;
 import com.example.shopapp.responses.product.ProductResponse;
 
 public interface IProductService {
+	
     Product createProduct(ProductDTO productDTO) throws Exception;
     
     Product getProductById(long id) throws Exception;

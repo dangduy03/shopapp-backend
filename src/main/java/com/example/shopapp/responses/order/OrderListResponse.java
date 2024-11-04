@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 public class OrderListResponse {
+	
     private List<OrderResponse> orders;
     
     private int totalPages;

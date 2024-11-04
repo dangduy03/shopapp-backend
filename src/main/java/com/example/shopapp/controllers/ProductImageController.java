@@ -19,8 +19,11 @@ import lombok.RequiredArgsConstructor;
 //Dependency Injection
 @RequiredArgsConstructor
 public class ProductImageController {
+	
     private final IProductImageService productImageService;
+    
     private final ProductService productService;
+    
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseObject> delete(
