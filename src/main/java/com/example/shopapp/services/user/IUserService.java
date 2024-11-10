@@ -24,8 +24,7 @@ public interface IUserService {
 
     Page<User> findAll(String keyword, Pageable pageable) throws Exception;
     
-    void resetPassword(Long userId, String newPassword)
-            throws InvalidPasswordException, DataNotFoundException;
+    void resetPassword(Long userId, String newPassword)throws InvalidPasswordException, DataNotFoundException;
     
     void blockOrEnable(Long userId, Boolean active) throws DataNotFoundException;
     

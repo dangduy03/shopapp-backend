@@ -1,5 +1,8 @@
 package com.example.shopapp.services.auth;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -9,6 +12,7 @@ import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -52,7 +56,6 @@ public class AuthService implements IAuthService{
                     googleRedirectUri,
                     Arrays.asList("email", "profile", "openid"));
             url = urlBuilder.build();
-            
         } else if ("facebook".equals(loginType)) {
             /*
             url = String.format("https://www.facebook.com/v3.2/dialog/oauth?client_id=%s&redirect_uri=%s&scope=email,public_profile&response_type=code",
@@ -67,9 +70,9 @@ public class AuthService implements IAuthService{
                     .build()
                     .toUriString();
         }
+
         return url;
     }
-    
     public Map<String, Object> authenticateAndFetchProfile(String code, String loginType) throws IOException {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
@@ -127,4 +130,3 @@ public class AuthService implements IAuthService{
     }
 
 }
-

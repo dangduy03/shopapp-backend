@@ -11,7 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.shopapp.components.JwtTokenUtils;
@@ -45,6 +44,7 @@ public class JwtTokenFilter extends OncePerRequestFilter{
                 filterChain.doFilter(request, response); //enable bypass
                 return;
             }
+            
             final String authHeader = request.getHeader("Authorization");
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 response.sendError(
@@ -52,6 +52,7 @@ public class JwtTokenFilter extends OncePerRequestFilter{
                         "authHeader null or not started with Bearer");
                 return;
             }
+            
             final String token = authHeader.substring(7);
             final String phoneNumber = jwtTokenUtil.getSubject(token);
             if (phoneNumber != null
@@ -80,20 +81,21 @@ public class JwtTokenFilter extends OncePerRequestFilter{
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
                 // Healthcheck request, no JWT token required
                 Pair.of(String.format("%s/healthcheck/health", apiPrefix), "GET"),
-                Pair.of(String.format("%s/actuator/**", apiPrefix), "GET"),
+                Pair.of(String.format("/actuator/**"), "GET"),// ko đc đụng vào
 
                 Pair.of(String.format("%s/roles**", apiPrefix), "GET"),
                 Pair.of(String.format("%s/policies**", apiPrefix), "GET"),
                 Pair.of(String.format("%s/comments**", apiPrefix), "GET"),
                 Pair.of(String.format("%s/coupons**", apiPrefix), "GET"),
 
-                Pair.of(String.format("%s/products**", apiPrefix), "GET"),
+                Pair.of(String.format("%s/products*", apiPrefix), "GET"),
                 Pair.of(String.format("%s/categories**", apiPrefix), "GET"),
 
                 Pair.of(String.format("%s/users/register", apiPrefix), "POST"),
                 Pair.of(String.format("%s/users/login", apiPrefix), "POST"),
-                Pair.of(String.format("%s/users/profile-images/**", apiPrefix), "GET"),
-                Pair.of(String.format("%s/users/refreshToken", apiPrefix), "POST"),
+                Pair.of(String.format("%s/usersprofile-images/**", apiPrefix), "GET"),
+                Pair.of(String.format("%s/usersrefreshToken", apiPrefix), "POST"),
+                Pair.of(String.format("%s/users/auth/social/callback", apiPrefix), "GET"),
 
                 // Swagger
                 Pair.of("/api-docs","GET"),
@@ -113,6 +115,8 @@ public class JwtTokenFilter extends OncePerRequestFilter{
 
         String requestPath = request.getServletPath();
         String requestMethod = request.getMethod();
+        
+        System.out.println("Checking bypass for: " + requestPath + " " + requestMethod);
 
         for (Pair<String, String> token : bypassTokens) {
             String path = token.getFirst();

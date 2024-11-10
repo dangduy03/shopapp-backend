@@ -1,4 +1,4 @@
-package com.example.shopapp.controllers;
+	package com.example.shopapp.controllers;
 
 import java.util.List;
 
@@ -74,7 +74,7 @@ public class CategoryController {
                         .message("Get list of categories successfully")
                         .status(HttpStatus.OK)
                         .data(categories)
-                .build());
+                        .build());
     }
 
     @GetMapping("/{id}")
@@ -86,8 +86,9 @@ public class CategoryController {
                         .data(existingCategory)
                         .message("Get category information successfully")
                         .status(HttpStatus.OK)
-                .build());
+                        .build());
     }
+    
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseObject> updateCategory(
@@ -101,6 +102,7 @@ public class CategoryController {
                 .message(localizationUtils.getLocalizedMessage(MessageKeys.UPDATE_CATEGORY_SUCCESSFULLY))
                 .build());
     }
+    
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseObject> deleteCategory(@PathVariable Long id) throws Exception{

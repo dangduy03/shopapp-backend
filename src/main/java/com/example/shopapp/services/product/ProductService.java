@@ -111,14 +111,17 @@ public class ProductService implements IProductService{
             if(productDTO.getPrice() >= 0) {
                 existingProduct.setPrice(productDTO.getPrice());
             }
+            
             if(productDTO.getDescription() != null &&
                     !productDTO.getDescription().isEmpty()) {
                 existingProduct.setDescription(productDTO.getDescription());
             }
+            
             if(productDTO.getThumbnail() != null &&
                     !productDTO.getThumbnail().isEmpty()) {
                 existingProduct.setDescription(productDTO.getThumbnail());
             }
+            
             return productRepository.save(existingProduct);
         }
         return null;
@@ -135,6 +138,7 @@ public class ProductService implements IProductService{
     public boolean existsByName(String name) {
         return productRepository.existsByName(name);
     }
+    
     @Override
     @Transactional
     public ProductImage createProductImage(
@@ -149,16 +153,20 @@ public class ProductService implements IProductService{
                 .product(existingProduct)
                 .imageUrl(productImageDTO.getImageUrl())
                 .build();
+        
         //Ko cho insert quá 5 ảnh cho 1 sản phẩm
         int size = productImageRepository.findByProductId(productId).size();
+        
         if(size >= ProductImage.MAXIMUM_IMAGES_PER_PRODUCT) {
             throw new InvalidParamException(
                     "Number of images must be <= "
                     +ProductImage.MAXIMUM_IMAGES_PER_PRODUCT);
         }
+        
         if (existingProduct.getThumbnail() == null ) {
             existingProduct.setThumbnail(newProductImage.getImageUrl());
         }
+        
         productRepository.save(existingProduct);
         return productImageRepository.save(newProductImage);
     }

@@ -14,17 +14,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass
-public class BaseEntity {
-	
-	@Column(name = "created_at")
-	private LocalDateTime createdAt;
-	
-	@Column(name = "updated_at")
-	private LocalDateTime updatedAt;
-	
-	@PrePersist
+public class BaseEntity{
+    @Column(name = "created_at")
+    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        createdAt = createdAt != null ? createdAt : LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 

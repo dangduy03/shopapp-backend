@@ -24,6 +24,7 @@ public class CustomHealthCheck implements HealthIndicator {
 			// DOWN => 503
 			// Healthcheck for Kafka
 			String clusterId = kafkaAdmin.clusterId();
+			
 			if (clusterId.isEmpty()) {
 				return Health.down().withDetail("Error", "Cannot get cluster's id").build();
 			} else {
@@ -32,6 +33,7 @@ public class CustomHealthCheck implements HealthIndicator {
 			String computerName = InetAddress.getLocalHost().getHostName();
 			details.put("computerName", String.format("computerName: %s", computerName));
 			return Health.up().withDetails(details).build();
+			
 		} catch (Exception e) {
 			return Health.down().withDetail("Error", e.getMessage()).build();
 		}

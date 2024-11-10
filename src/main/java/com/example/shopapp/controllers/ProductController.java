@@ -243,6 +243,7 @@ public class ProductController {
                 .data(productListResponse)
                 .build());
     }
+    
     //http://localhost:8088/api/v1/products/6
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getProductById(
@@ -256,6 +257,7 @@ public class ProductController {
                 .build());
 
     }
+    
     @GetMapping("/by-ids")
     public ResponseEntity<ResponseObject> getProductsByIds(@RequestParam("ids") String ids) {
         //eg: 1,3,5,7
@@ -335,6 +337,7 @@ public class ProductController {
                 .status(HttpStatus.OK)
                 .build());
     }
+    
     @PostMapping("/unlike/{productId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> unlikeProduct(@PathVariable Long productId) throws Exception {
@@ -346,6 +349,7 @@ public class ProductController {
                 .status(HttpStatus.OK)
                 .build());
     }
+    
     @PostMapping("/favorite-products")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> findFavoriteProductsByUserId() throws Exception {
@@ -357,6 +361,7 @@ public class ProductController {
                 .status(HttpStatus.OK)
                 .build());
     }
+    
     @PostMapping("/generateFakeLikes")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseObject> generateFakeLikes() throws Exception {

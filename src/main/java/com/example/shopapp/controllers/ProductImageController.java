@@ -30,9 +30,11 @@ public class ProductImageController {
             @PathVariable Long id
     ) throws Exception {
         ProductImage productImage = productImageService.deleteProductImage(id);
+        
         if(productImage != null){
             FileUtils.deleteFile(productImage.getImageUrl());
         }
+        
         return ResponseEntity.ok().body(
                 ResponseObject.builder()
                         .message("Delete product image successfully")

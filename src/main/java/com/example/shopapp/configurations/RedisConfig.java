@@ -1,6 +1,5 @@
 package com.example.shopapp.configurations;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -22,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 @Configuration
 public class RedisConfig {
     private static final Logger logger = LoggerFactory.getLogger(RedisConfig.class);
+    
     @Value("${spring.data.redis.host}") // Read 'spring.data.redis.host' property from application.yml
     private String redisHost;
 
@@ -35,6 +35,7 @@ public class RedisConfig {
                 new RedisStandaloneConfiguration(redisHost, redisPort);
         return new LettuceConnectionFactory(configuration);
     }
+    
     @Bean
     public RedisTemplate<String, Object> redisTemplate()
 
@@ -50,6 +51,7 @@ public class RedisConfig {
         template.afterPropertiesSet();
         return template;
     }
+    
     @Bean
     public ObjectMapper redisObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
