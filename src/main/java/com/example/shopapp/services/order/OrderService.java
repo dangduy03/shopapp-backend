@@ -75,7 +75,9 @@ public class OrderService implements IOrderService{
         order.setShippingDate(shippingDate);
         order.setActive(true);//đoạn này nên set sẵn trong sql
         //EAV-Entity-Attribute-Value model
-        order.setTotalMoney(orderDTO.getTotalMoney());
+        
+        // Tính tổng tiền của đơn hàng
+		Float totalPrice = 0F;
         // Tạo danh sách các đối tượng OrderDetail từ cartItems
         List<OrderDetail> orderDetails = new ArrayList<>();
         for (CartItemDTO cartItemDTO : orderDTO.getCartItems()) {
@@ -96,10 +98,14 @@ public class OrderService implements IOrderService{
             orderDetail.setNumberOfProducts(quantity);
             // Các trường khác của OrderDetail nếu cần
             orderDetail.setPrice(product.getPrice());
+            totalPrice = totalPrice + (quantity * product.getPrice());
 
             // Thêm OrderDetail vào danh sách
             orderDetails.add(orderDetail);
         }
+        
+        // Gán giá trị tổng tiền cho order
+        order.setTotalMoney(totalPrice);
 
         //coupon
         String couponCode = orderDTO.getCouponCode();
