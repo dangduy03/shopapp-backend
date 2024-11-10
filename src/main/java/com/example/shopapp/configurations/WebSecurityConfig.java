@@ -21,7 +21,9 @@ import lombok.RequiredArgsConstructor;
 import static org.springframework.http.HttpMethod.*;
 
 @Configuration
+//@EnableMethodSecurity
 @EnableWebSecurity(debug = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebMvc
 @RequiredArgsConstructor
 public class WebSecurityConfig {
@@ -42,8 +44,10 @@ public class WebSecurityConfig {
                             .requestMatchers(
                                     String.format("%s/users/register", apiPrefix),
                                     String.format("%s/users/login", apiPrefix),
+                                    
                                     //healthcheck
                                     String.format("%s/healthcheck/**", apiPrefix),
+                                    
                                     //swagger
                                     //"/v3/api-docs",
                                     //"/v3/api-docs/**",
@@ -57,12 +61,14 @@ public class WebSecurityConfig {
                                     "/swagger-ui.html",
                                     "/webjars/swagger-ui/**",
                                     "/swagger-ui/index.html",
+                                    
                                     //Google login
                                     "users/auth/social-login",
-                                    "users/auth/social/callback"
-
+                                    "users/auth/social/callback",
+                                    "actuator/health"
                             )
                             .permitAll()
+                            
                             .requestMatchers(GET,
                                     String.format("%s/roles**", apiPrefix)).permitAll()
 
@@ -80,16 +86,21 @@ public class WebSecurityConfig {
 
                             .requestMatchers(GET,
                                     String.format("%s/orders/**", apiPrefix)).permitAll()
+                            
                             .requestMatchers(GET,
-                                    String.format("%s/users/profile-images/**", apiPrefix))
-                            .permitAll()
+                                    String.format("%s/users/profile-images/**", apiPrefix)).permitAll()
 
                             .requestMatchers(GET,
                                     String.format("%s/order_details/**", apiPrefix)).permitAll()
-
-                            .anyRequest()
-                            .authenticated();
-                            //.anyRequest().permitAll();
+                            
+                            .requestMatchers(GET,
+                                    String.format("%s/error", apiPrefix)).permitAll()
+                            
+                            .requestMatchers(GET,
+                                    String.format ("%s/actuator/**", apiPrefix)).permitAll()
+                            
+                            .requestMatchers("/api/v1/**").authenticated()
+                            .anyRequest().permitAll();
                 })
                 .csrf(AbstractHttpConfigurer::disable)
                 .oauth2Login(Customizer.withDefaults())
