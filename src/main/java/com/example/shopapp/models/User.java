@@ -122,6 +122,9 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
     public boolean isEnabled() {
         return true;
     }
+    
+    
+    
 
     //Login facebook
     @Override

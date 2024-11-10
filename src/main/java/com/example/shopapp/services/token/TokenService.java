@@ -75,6 +75,7 @@ public class TokenService implements ITokenService{
             }
             tokenRepository.delete(tokenToDelete);
         }
+        
         long expirationInSeconds = expiration;
         LocalDateTime expirationDateTime = LocalDateTime.now().plusSeconds(expirationInSeconds);
         // Tạo mới một token cho người dùng
