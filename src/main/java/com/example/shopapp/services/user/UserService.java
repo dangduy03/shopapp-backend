@@ -54,7 +54,6 @@ public class UserService implements IUserService{
     @Override
     @Transactional
     public User createUser(UserDTO userDTO) throws Exception {
-        //register user
         if (!userDTO.getPhoneNumber().isBlank() && userRepository.existsByPhoneNumber(userDTO.getPhoneNumber())) {
             throw new DataIntegrityViolationException("Phone number already exists");
         }
@@ -65,11 +64,10 @@ public class UserService implements IUserService{
                 .orElseThrow(() -> new DataNotFoundException(
                         localizationUtils.getLocalizedMessage(MessageKeys.ROLE_DOES_NOT_EXISTS)));
 
-
         if (role.getName().equalsIgnoreCase(Role.ADMIN)) {
             throw new PermissionDenyException("Registering admin accounts is not allowed");
         }
-        //convert from userDTO => user
+
         User newUser = User.builder()
                 .fullName(userDTO.getFullName())
                 .phoneNumber(userDTO.getPhoneNumber())
@@ -99,11 +97,11 @@ public class UserService implements IUserService{
         Role roleUser =roleRepository.findByName(Role.USER)
                 .orElseThrow(() -> new DataNotFoundException(
                         localizationUtils.getLocalizedMessage(MessageKeys.ROLE_DOES_NOT_EXISTS)));
-        // Check by Google Account ID
+
         if (userLoginDTO.getGoogleAccountId() != null && userLoginDTO.isGoogleAccountIdValid()) {
             optionalUser = userRepository.findByGoogleAccountId(userLoginDTO.getGoogleAccountId());
             subject = "Google:" + userLoginDTO.getGoogleAccountId();
-            // Nếu không tìm thấy người dùng, tạo bản ghi mới
+
             if (optionalUser.isEmpty()) {
                 User newUser = User.builder()
                         .fullName(userLoginDTO.getFullname() != null ? userLoginDTO.getFullname() : "")
@@ -115,9 +113,7 @@ public class UserService implements IUserService{
                         .active(true) 
                         .build();
 
-                // Lưu người dùng mới vào cơ sở dữ liệu
                 newUser = userRepository.save(newUser);
-                // Optional trở thành có giá trị với người dùng mới
                 optionalUser = Optional.of(newUser);
             }
 
@@ -125,69 +121,58 @@ public class UserService implements IUserService{
             attributes.put("email", userLoginDTO.getEmail());
             return jwtTokenUtil.generateToken(optionalUser.get());
         }
-        // Check by Facebook Account ID
         if (optionalUser.isEmpty() && userLoginDTO.isFacebookAccountIdValid()) {
             optionalUser = userRepository.findByFacebookAccountId(userLoginDTO.getFacebookAccountId());
             subject = "Facebook:" + userLoginDTO.getFacebookAccountId();
 
-            // Nếu không tìm thấy người dùng, tạo bản ghi mới
             if (optionalUser.isEmpty()) {
                 User newUser = User.builder()
                         .fullName(userLoginDTO.getFullname() != null ? userLoginDTO.getFullname() : "")
                         .email(userLoginDTO.getEmail() != null ? userLoginDTO.getEmail() : "")
                         .facebookAccountId(userLoginDTO.getFacebookAccountId())
                         .role(roleUser)
-                        .password("") // Thiết lập mật khẩu là chuỗi rỗng
-                        .active(true) // Kích hoạt ngay lập tức cho người dùng mới
+                        .password("")
+                        .active(true)
                         .build();
 
-                // Lưu người dùng mới vào cơ sở dữ liệu
                 newUser = userRepository.save(newUser);
-
-                // Optional trở thành có giá trị với người dùng mới
                 optionalUser = Optional.of(newUser);
             }
         }
-        // Check if the user exists by phone number
+
         if (userLoginDTO.getPhoneNumber() != null && !userLoginDTO.getPhoneNumber().isBlank()) {
             optionalUser = userRepository.findByPhoneNumber(userLoginDTO.getPhoneNumber());
             subject = userLoginDTO.getPhoneNumber();
         }
 
-        // If the user is not found by phone number, check by email
         if (optionalUser.isEmpty() && userLoginDTO.getEmail() != null) {
             optionalUser = userRepository.findByEmail(userLoginDTO.getEmail());
             subject = userLoginDTO.getEmail();
         }
 
-        // If user is not found, throw an exception
         if (optionalUser.isEmpty()) {
             throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
         }
 
         User existingUser = optionalUser.get();
 
-        // Check if the user account is active
         if (!existingUser.isActive()) {
             throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.USER_IS_LOCKED));
         }
 
-        // Create authentication token using the found subject and granted authorities
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 subject,
                 userLoginDTO.isPasswordBlank()  ? "" : userLoginDTO.getPassword(),
                 existingUser.getAuthorities()
         );
 
-
-        //authenticate with Java Spring security
         authenticationManager.authenticate(authenticationToken);
         return jwtTokenUtil.generateToken(existingUser);
     }
+    
     @Transactional
     @Override
     public User updateUser(Long userId, UpdateUserDTO updatedUserDTO) throws Exception {
-        // Find the existing user by userId
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new DataNotFoundException("User not found"));
 
@@ -221,8 +206,6 @@ public class UserService implements IUserService{
             existingUser.setGoogleAccountId(updatedUserDTO.getGoogleAccountId());
         }
 
-
-        // Update the password if it is provided in the DTO
         if (updatedUserDTO.getPassword() != null
                 && !updatedUserDTO.getPassword().isEmpty()) {
             if(!updatedUserDTO.getPassword().equals(updatedUserDTO.getRetypePassword())) {
@@ -270,7 +253,6 @@ public class UserService implements IUserService{
         String encodedPassword = passwordEncoder.encode(newPassword);
         existingUser.setPassword(encodedPassword);
         userRepository.save(existingUser);
-        //reset password => clear token
         List<Token> tokens = tokenRepository.findByUser(existingUser);
         for (Token token : tokens) {
             tokenRepository.delete(token);

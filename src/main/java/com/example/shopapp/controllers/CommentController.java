@@ -19,8 +19,6 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("${api.prefix}/comments")
-//@Validated
-//Dependency Injection
 @RequiredArgsConstructor
 public class CommentController {
 	
@@ -73,7 +71,6 @@ public class CommentController {
     public ResponseEntity<ResponseObject> insertComment(
             @Valid @RequestBody CommentDTO commentDTO
     ) {
-        // Insert the new comment
         User loginUser = securityUtils.getLoggedInUser();
         if(loginUser.getId() != commentDTO.getUserId()) {
             return ResponseEntity.badRequest().body(

@@ -49,7 +49,6 @@ public class Token {
     
     private boolean expired;
 
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

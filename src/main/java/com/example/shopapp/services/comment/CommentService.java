@@ -85,38 +85,30 @@ public class CommentService implements ICommentService{
     }
 
     @Override
-    //@Transactional
     public void generateFakeComments() throws Exception {
         Faker faker = new Faker();
         Random random = new Random();
-        // Get all users with roleId = 1
-        //List<User> users = userRepository.findByRoleId(1L);
         List<User> users = userRepository.findAll();
-        // Get all products
         List<Product> products = productRepository.findAll();
         List<Comment> comments = new ArrayList<>();
         final int totalRecords = 10_000;
         final int batchSize = 1000;
         for (int i = 0; i < totalRecords; i++) {
 
-            // Select a random user and product
             User user = users.get(random.nextInt(users.size()));
             Product product = products.get(random.nextInt(products.size()));
 
-            // Generate a fake comment
             Comment comment = Comment.builder()
                     .content(faker.lorem().sentence())
                     .product(product)
                     .user(user)
                     .build();
 
-            // Set a random created date within the range of 2015 to now
             LocalDateTime startDate = LocalDateTime.of(2015, 1, 1, 0, 0);
             LocalDateTime endDate = LocalDateTime.now();
             long randomEpoch = ThreadLocalRandom.current()
                     .nextLong(startDate.toEpochSecond(ZoneOffset.UTC), endDate.toEpochSecond(ZoneOffset.UTC));
             comment.setCreatedAt(LocalDateTime.ofEpochSecond(randomEpoch, 0, ZoneOffset.UTC));
-            // Save the comment
             comments.add(comment);
             if(comments.size() >= batchSize) {
                 commentRepository.saveAll(comments);

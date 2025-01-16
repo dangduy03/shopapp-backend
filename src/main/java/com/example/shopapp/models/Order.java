@@ -24,7 +24,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Builder
 @Data
 @AllArgsConstructor
@@ -81,7 +80,7 @@ public class Order {
     private String paymentMethod = "";
 
     @Column(name = "is_active")
-    private Boolean active;//thuộc về admin
+    private Boolean active;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference

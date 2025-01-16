@@ -27,24 +27,20 @@ public class SecurityConfig {
 	
 	private final WebClient userInfoClient;
 	
-	 // user's deatail object
 	@Bean 
 	public UserDetailsService userDetailsService() { 
 		
 		return subject -> {
-            // Attempt to find user by phone number
             Optional<User> userByPhoneNumber = userRepository.findByPhoneNumber(subject);
             if (userByPhoneNumber.isPresent()) {
-                return userByPhoneNumber.get(); // Return UserDetails if found
+                return userByPhoneNumber.get();
             }
 
-            // If user not found by phone number, attempt to find by email
             Optional<User> userByEmail = userRepository.findByEmail(subject);
             if (userByEmail.isPresent()) {
-                return userByEmail.get(); // Return UserDetails if found
+                return userByEmail.get();
             }
 
-            // If user not found by either phone number or email, throw UsernameNotFoundException
             throw new UsernameNotFoundException("User not found with subject: " + subject);
         };
 	}

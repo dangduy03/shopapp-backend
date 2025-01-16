@@ -9,11 +9,7 @@ public interface ICategoryService {
 	
 	Category createCategory(CategoryDTO category);
 	
-//	Category getCategoryById(Long id);
-	
 	List<Category> getAllCategories();
-	
-//	Category updateCategory(Long CategoryId, CategoryDTO category);
 	
 	Category deleteCategory(long id) throws Exception;
 

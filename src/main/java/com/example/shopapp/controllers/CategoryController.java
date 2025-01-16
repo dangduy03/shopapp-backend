@@ -1,4 +1,4 @@
-	package com.example.shopapp.controllers;
+package com.example.shopapp.controllers;
 
 import java.util.List;
 
@@ -20,11 +20,9 @@ import com.example.shopapp.responses.ResponseObject;
 import com.example.shopapp.services.category.CategoryService;
 import com.example.shopapp.utils.MessageKeys;
 
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/categories")
-//@Validated
 public class CategoryController {
 	
     private final CategoryService categoryService;
@@ -35,7 +33,6 @@ public class CategoryController {
 
     @PostMapping("")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    //Nếu tham số truyền vào là 1 object thì sao ? => Data Transfer Object = Request Object
     public ResponseEntity<ResponseObject> createCategory(
             @Valid @RequestBody CategoryDTO categoryDTO,
             BindingResult result) {
@@ -52,7 +49,7 @@ public class CategoryController {
 
         }
         Category category = categoryService.createCategory(categoryDTO);
-        this.kafkaTemplate.send("insert-a-category", category);//producer
+        this.kafkaTemplate.send("insert-a-category", category);
         this.kafkaTemplate.setMessageConverter(new CategoryMessageConverter());
         return ResponseEntity.ok().body(ResponseObject.builder()
                 .message("Create category successfully")
@@ -61,7 +58,6 @@ public class CategoryController {
                 .build());
     }
 
-    //Hiện tất cả các categories
     @GetMapping("")
     public ResponseEntity<ResponseObject> getAllCategories(
             @RequestParam("page")     int page,

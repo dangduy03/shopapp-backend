@@ -41,7 +41,7 @@ public class JwtTokenFilter extends OncePerRequestFilter{
             throws ServletException, IOException {
         try {
             if(isBypassToken(request)) {
-                filterChain.doFilter(request, response); //enable bypass
+                filterChain.doFilter(request, response);
                 return;
             }
             
@@ -69,7 +69,7 @@ public class JwtTokenFilter extends OncePerRequestFilter{
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
              }
-            filterChain.doFilter(request, response); //enable bypass
+            filterChain.doFilter(request, response);
         }catch (Exception e) {
             //response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -79,9 +79,11 @@ public class JwtTokenFilter extends OncePerRequestFilter{
     }
     private boolean isBypassToken(@NonNull HttpServletRequest request) {
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
-                // Healthcheck request, no JWT token required
+        		
+        		
                 Pair.of(String.format("%s/healthcheck/health", apiPrefix), "GET"),
-                Pair.of(String.format("/actuator/**"), "GET"),// ko đc đụng vào
+                Pair.of(String.format("/actuator/**"), "GET"),
+                Pair.of(String.format("%s/excel/**", apiPrefix), "POST"),
 
                 Pair.of(String.format("%s/roles**", apiPrefix), "GET"),
                 Pair.of(String.format("%s/policies**", apiPrefix), "GET"),
@@ -96,8 +98,8 @@ public class JwtTokenFilter extends OncePerRequestFilter{
                 Pair.of(String.format("%s/usersprofile-images/**", apiPrefix), "GET"),
                 Pair.of(String.format("%s/usersrefreshToken", apiPrefix), "POST"),
                 Pair.of(String.format("%s/users/auth/social/callback", apiPrefix), "GET"),
+                
 
-                // Swagger
                 Pair.of("/api-docs","GET"),
                 Pair.of("/api-docs/**","GET"),
                 Pair.of("/swagger-resources","GET"),
@@ -108,7 +110,7 @@ public class JwtTokenFilter extends OncePerRequestFilter{
                 Pair.of("/swagger-ui.html", "GET"),
                 Pair.of("/swagger-ui/index.html", "GET"),
 
-                //Đăng nhập social
+                
                 Pair.of(String.format("%s/users/auth/social-login**", apiPrefix), "GET"),
                 Pair.of(String.format("%s/users/auth/social/callback**", apiPrefix), "GET")
         );
@@ -121,7 +123,6 @@ public class JwtTokenFilter extends OncePerRequestFilter{
         for (Pair<String, String> token : bypassTokens) {
             String path = token.getFirst();
             String method = token.getSecond();
-            // Check if the request path and method match any pair in the bypassTokens list
             if (requestPath.matches(path.replace("**", ".*"))
                     && requestMethod.equalsIgnoreCase(method)) {
                 return true;

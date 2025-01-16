@@ -23,7 +23,7 @@ public class TokenService implements ITokenService{
     private static final int MAX_TOKENS = 3;
     
     @Value("${jwt.expiration-time}")
-    private int expiration; //save to an environment variable
+    private int expiration;
 
     @Value("${jwt.expiration-refresh-token}")
     private int expirationRefreshToken;
@@ -57,10 +57,7 @@ public class TokenService implements ITokenService{
     public Token addToken(User user,String token, boolean isMobileDevice) {
         List<Token> userTokens = tokenRepository.findByUser(user);
         int tokenCount = userTokens.size();
-        // Số lượng token vượt quá giới hạn, xóa một token cũ
         if (tokenCount >= MAX_TOKENS) {
-            //kiểm tra xem trong danh sách userTokens có tồn tại ít nhất
-            //một token không phải là thiết bị di động (non-mobile)
             boolean hasNonMobileToken = !userTokens.stream().allMatch(Token::isMobile);
             Token tokenToDelete;
             if (hasNonMobileToken) {
@@ -69,8 +66,6 @@ public class TokenService implements ITokenService{
                         .findFirst()
                         .orElse(userTokens.get(0));
             } else {
-                //tất cả các token đều là thiết bị di động,
-                //chúng ta sẽ xóa token đầu tiên trong danh sách
                 tokenToDelete = userTokens.get(0);
             }
             tokenRepository.delete(tokenToDelete);
@@ -78,7 +73,6 @@ public class TokenService implements ITokenService{
         
         long expirationInSeconds = expiration;
         LocalDateTime expirationDateTime = LocalDateTime.now().plusSeconds(expirationInSeconds);
-        // Tạo mới một token cho người dùng
         Token newToken = Token.builder()
                 .user(user)
                 .token(token)

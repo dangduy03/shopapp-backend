@@ -8,8 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
 
 public interface IProductRedisService {
-    //Clear cached data in Redis
-    void clear();//clear cache
+    void clear();
     
     List<ProductResponse> getAllProducts(
             String keyword,

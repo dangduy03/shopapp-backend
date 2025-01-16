@@ -31,8 +31,6 @@ public interface IProductService {
             						ProductImageDTO productImageDTO) throws Exception;
 
     List<Product> findProductsByIds(List<Long> productIds);
-    //String storeFile(MultipartFile file) throws IOException; //chuyển sang FileUtils
-    //void deleteFile(String filename) throws IOException;
 
     Product likeProduct(Long userId, Long productId) throws Exception;
     

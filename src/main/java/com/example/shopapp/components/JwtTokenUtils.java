@@ -25,7 +25,7 @@ import java.util.function.Function;
 public class JwtTokenUtils {
 
 	@Value("${jwt.expiration-time}")
-	private int expiration; // save to an environment variable
+	private int expiration;
 
 	@Value("${jwt.expiration-refresh-token}")
 	private int expirationRefreshToken;
@@ -38,30 +38,23 @@ public class JwtTokenUtils {
 	private final TokenRepository tokenRepository;
 
 	public String generateToken(User user) throws Exception {
-		// properties => claims
 		Map<String, Object> claims = new HashMap<>();
-		// Add subject identifier (phone number or email)
 		String subject = getSubject(user);
 		claims.put("subject", subject);
-		// Add user ID
 		claims.put("userId", user.getId());
 		try {
-			String token = Jwts.builder().setClaims(claims) // how to extract claims from this ?
+			String token = Jwts.builder().setClaims(claims)
 					.setSubject(subject).setExpiration(new Date(System.currentTimeMillis() + expiration * 1000L))
 					.signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
 			return token;
 		} catch (Exception e) {
-			// you can "inject" Logger, instead System.out.println
 			throw new InvalidParamException("Cannot create jwt token, error: " + e.getMessage());
-			// return null;
 		}
 	}
 
 	private static String getSubject(User user) {
-		// Determine subject identifier (phone number or email)
 		String subject = user.getPhoneNumber();
 		if (subject == null || subject.isBlank()) {
-			// If phone number is null or blank, use email as subject
 			subject = user.getEmail();
 		}
 		return subject;
@@ -74,18 +67,18 @@ public class JwtTokenUtils {
 
 	private String generateSecretKey() {
 		SecureRandom random = new SecureRandom();
-		byte[] keyBytes = new byte[32]; // 256-bit key
+		byte[] keyBytes = new byte[32];
 		random.nextBytes(keyBytes);
 		String secretKey = Encoders.BASE64.encode(keyBytes);
 		return secretKey;
 	}
 
 	private Claims extractAllClaims(String token) {
-		return Jwts.parserBuilder() // Khởi tạo JwtParserBuilder
-				.setSigningKey(getSignInKey()) // Sử dụng setSigningKey() để thiết lập signing key
-				.build() // Xây dựng JwtParser
-				.parseClaimsJws(token) // Phân tích token đã ký
-				.getBody(); // Lấy phần body của JWT, chứa claims
+		return Jwts.parserBuilder()
+				.setSigningKey(getSignInKey())
+				.build()
+				.parseClaimsJws(token)
+				.getBody();
 	}
 
 	public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -106,7 +99,6 @@ public class JwtTokenUtils {
 	public boolean validateToken(String token, User userDetails) {
 		try {
 			String subject = extractClaim(token, Claims::getSubject);
-			// subject is phoneNumber or email
 			Token existingToken = tokenRepository.findByToken(token);
 			if (existingToken == null || existingToken.isRevoked() == true || !userDetails.isActive()) {
 				return false;

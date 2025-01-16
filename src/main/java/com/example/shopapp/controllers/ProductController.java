@@ -60,8 +60,6 @@ public class ProductController {
     
     private final SecurityUtils securityUtils;
 	
-
-//	coi mimio nhhha
 	@Autowired
     private MinioService minioService;
 
@@ -84,19 +82,9 @@ public class ProductController {
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-	
+    	
     @PostMapping("")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    //POST http://localhost:8088/v1/api/products
     public ResponseEntity<ResponseObject> createProduct(
             @Valid @RequestBody ProductDTO productDTO,
             BindingResult result
@@ -122,77 +110,6 @@ public class ProductController {
                         .build());
     }
 	
-	
-//	@PostMapping(value = "upload/{id}", 
-//			consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//	public ResponseEntity<?> uploadImages(
-//			@PathVariable("id") Long productId,
-//			@ModelAttribute("files") List<MultipartFile> files	
-//	){
-//		try {
-//			Product existingProduct = productService.getProductById(productId);
-//			files = files == null ? new ArrayList<MultipartFile>() : files;
-//			if (files.size() > ProductImage.MAXIMUM_IMAGES_PER_PRODUCT) {
-//				return ResponseEntity.badRequest().body("You can only upload maxximum 5 images");
-//			}
-//			List<ProductImage> productImages = new ArrayList<>();
-//			for(MultipartFile file : files) {
-//				if (file.getSize() == 0) {
-//					continue;
-//				}
-//				// kiểm tra kích thước của file và định dạng
-//				if (file.getSize() > 10 * 1024 * 1024) { 
-//					return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
-//							.body("File is too large! Maximum size is 10MB ");
-//				}
-//				String contenType = file.getContentType();
-//				if (contenType == null || !contenType.startsWith("image/")) {
-//					return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("File must be an image");
-//				}
-//				// Lưu file cà cập nhật vào thumbnail trong DTO
-//				String filename = storeFile(file);
-//				// Thay thế hàm này với code của bạn để lưu file
-//				// Lưu vào đối tượng trong product trong DB 
-//				ProductImage productImage = productService.createProductImage(
-//						existingProduct.getId(),
-//						ProductImageDTO.builder()
-//								.imageUrl(filename)	
-//								.build()	
-//				);//lưu vào bảng product_images
-//				productImages.add(productImage);
-//			}
-//			return ResponseEntity.ok().body(productImages);
-//		} catch (Exception e) {
-//			return ResponseEntity.badRequest().body(e.getMessage());
-//		}
-//	}
-//
-//	
-//	private String storeFile(MultipartFile file) throws IOException {
-//		if (!isImageFile(file) || file.getOriginalFilename() == null) {
-//			throw new IOException("Invalid image format");
-//		}
-//		String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-//		
-////		Thêm UUID vào trước tên file để đảm bảo file là duy nhất
-//		String uniqueFilename = UUID.randomUUID().toString() + "_" + filename;
-//		java.nio.file.Path uploadDir = Paths.get("uploads");
-//		
-////		Kiem tra và tạo thư mục nếu nó ko tồn tại
-//		if (!Files.exists(uploadDir)) {
-//			Files.createDirectories(uploadDir);
-//		}
-//		// Đường dẫn đầy đủ đến file
-//		java.nio.file.Path destination = Paths.get(uploadDir.toString(), uniqueFilename);
-//		// sao chép file vào thư mục đich
-//		Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
-//		return uniqueFilename;
-//	}
-//	private boolean isImageFile(MultipartFile file) {
-//		String contentType = file.getContentType();
-//		return contentType != null && contentType.startsWith("image/");
-//	}
-
     @GetMapping("")
     public ResponseEntity<ResponseObject> getProducts(
             @RequestParam(defaultValue = "") String keyword,
@@ -202,7 +119,6 @@ public class ProductController {
     ) throws JsonProcessingException {
         int totalPages = 0;
         //productRedisService.clear();
-        // Tạo Pageable từ thông tin trang và giới hạn
         PageRequest pageRequest = PageRequest.of(
                 page, limit,
                 //Sort.by("createdAt").descending()
@@ -217,11 +133,10 @@ public class ProductController {
         }
         if(productResponses == null) {
             Page<ProductResponse> productPage = productService
-                    .getAllProducts(keyword, categoryId, pageRequest);
-            // Lấy tổng số trang
+                    				.getAllProducts(keyword, categoryId, pageRequest);
             totalPages = productPage.getTotalPages();
             productResponses = productPage.getContent();
-            // Bổ sung totalPages vào các đối tượng ProductResponse
+
             for (ProductResponse product : productResponses) {
                 product.setTotalPages(totalPages);
             }
@@ -243,8 +158,7 @@ public class ProductController {
                 .data(productListResponse)
                 .build());
     }
-    
-    //http://localhost:8088/api/v1/products/6
+
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getProductById(
             @PathVariable("id") Long productId
@@ -260,11 +174,11 @@ public class ProductController {
     
     @GetMapping("/by-ids")
     public ResponseEntity<ResponseObject> getProductsByIds(@RequestParam("ids") String ids) {
-        //eg: 1,3,5,7
-        // Tách chuỗi ids thành một mảng các số nguyên
+
         List<Long> productIds = Arrays.stream(ids.split(","))
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
+        
         List<Product> products = productService.findProductsByIds(productIds);
         return ResponseEntity.ok(ResponseObject.builder()
                 .data(products.stream().map(product -> ProductResponse.fromProduct(product)).toList())
@@ -310,10 +224,8 @@ public class ProductController {
                 .build());
     }
     
-    //update a product
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    //@SecurityRequirement(name="bearer-key")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity<ResponseObject> updateProduct(
             @PathVariable long id,

@@ -29,13 +29,11 @@ public class OrderDetailService implements IOrderDetailService{
 	@Override
 	@Transactional
 	public OrderDetail createOrderDetail(OrderDetailDTO orderDetailDTO) throws Exception {
-		
-		// tìm xem orderId có tồn tại ko
+
 		Order order = orderRepository.findById(orderDetailDTO.getOrderId())
 				.orElseThrow(() -> new DataNotFoundException(
 						"Cannot find Order with id : " + orderDetailDTO.getOrderId())); 
-		
-		// tim product theo id 
+
 		Product product = productRepository.findById(orderDetailDTO.getProductId())
 				.orElseThrow(() -> new DataNotFoundException(
 						"Cannot find Product with id : " + orderDetailDTO.getProductId())); 
@@ -48,24 +46,21 @@ public class OrderDetailService implements IOrderDetailService{
 				.totalMoney(orderDetailDTO.getTotalMoney())
 				.color(orderDetailDTO.getColor())
 				.build();
-		//lưu vào db
+
 		return orderDetailRepository.save(orderDetail);
 	}
 
-	
 	@Override
 	public OrderDetail getOrderDetail(Long id) throws DataNotFoundException {
 		return orderDetailRepository.findById(id)
 				.orElseThrow(() -> new DataNotFoundException("Cannot find OrderDetail with id " +id));
 	}
 
-	
 	@Override
 	@Transactional
 	public OrderDetail updateOrderDetail(Long id, OrderDetailDTO orderDetailDTO) 
 			throws DataNotFoundException {
-		
-		// tìm xem order detail có tồn tại hay ko
+
 		OrderDetail existingOrderDetail = orderDetailRepository.findById(id)
 				.orElseThrow(() -> new DataNotFoundException(
 						"Cannot find order detail with id : "+id));
@@ -87,7 +82,6 @@ public class OrderDetailService implements IOrderDetailService{
 		return orderDetailRepository.save(existingOrderDetail);
 	}
 
-	
 	@Override
 	@Transactional
 	public void deleteById(Long id) {
@@ -95,7 +89,6 @@ public class OrderDetailService implements IOrderDetailService{
 		
 	}
 
-	
 	@Override
 	public List<OrderDetail> findByOrderId(Long orderId) {
 		return orderDetailRepository.findByOrderId(orderId);

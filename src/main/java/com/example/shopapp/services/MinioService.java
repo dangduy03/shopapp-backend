@@ -60,7 +60,6 @@ public class MinioService {
 
         for (MultipartFile file : files) {
             try {
-                // Kiểm tra dung lượng file
                 if (file.getSize() > MAX_FILE_SIZE) {
                     throw new Exception("File " + file.getOriginalFilename() + " vượt quá dung lượng tối đa cho phép là 5MB.");
                 }
@@ -74,17 +73,17 @@ public class MinioService {
                                 .contentType(file.getContentType())
                                 .build()
                 );
+                
                 ProductImage productImage = ProductImage.builder()
                 		.product(existingProduct)
                 		.imageUrl(bucketName + "/" + fileName)
                 		.build();
                 productImageRepository.save(productImage);
-                uploadedFileNames.add(fileName);  // Thêm tên file vào danh sách kết quả
+                uploadedFileNames.add(fileName);
             } catch (Exception e) {
                 throw new Exception("Lỗi khi upload file: " + file.getOriginalFilename() + ". " + e.getMessage());
             }
         }
-
 
         return uploadedFileNames;
     }

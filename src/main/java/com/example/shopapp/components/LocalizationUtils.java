@@ -19,7 +19,7 @@ public class LocalizationUtils {
 	
 	private final LocaleResolver  localeResolver;
 	
-	public String getLocalizedMessage(String messageKey, Object... params) {//spread operator
+	public String getLocalizedMessage(String messageKey, Object... params) {
 		HttpServletRequest request = WebUtils.getCurrentRequest();
 	    Locale locale = localeResolver.resolveLocale(request);    
 		return messageSource.getMessage(messageKey, params, locale);

@@ -3,7 +3,7 @@ package com.example.shopapp.dtos;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-@Data//toString
+@Data
 @Getter
 @Setter
 @AllArgsConstructor

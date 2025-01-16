@@ -16,11 +16,9 @@ import lombok.NoArgsConstructor;
 @MappedSuperclass
 public class BaseEntity{
     @Column(name = "created_at")
-    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     private LocalDateTime updatedAt;
 
     @PrePersist

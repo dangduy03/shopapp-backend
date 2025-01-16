@@ -37,8 +37,7 @@ public class ProductResponse extends BaseResponse {
     private String thumbnail;
     
     private String description;
-    
-    // Thêm trường totalPages
+
     private int totalPages;
 
     @JsonProperty("product_images")
@@ -56,7 +55,7 @@ public class ProductResponse extends BaseResponse {
     public static ProductResponse fromProduct(Product product) {
         List<Comment> comments = product.getComments()
                 .stream()
-                .sorted(Comparator.comparing(Comment::getCreatedAt).reversed()) // Sort comments by createdAt in descending order
+                .sorted(Comparator.comparing(Comment::getCreatedAt).reversed())
                 .collect(Collectors.toList());
         
         List<Favorite> favorites = product.getFavorites();
@@ -66,7 +65,7 @@ public class ProductResponse extends BaseResponse {
                 .name(product.getName())
                 .price(product.getPrice())
                 .thumbnail(product.getThumbnail())
-                .comments(comments.stream().map(CommentResponse::fromComment).toList()) // Collect sorted comments into a list
+                .comments(comments.stream().map(CommentResponse::fromComment).toList())
                 .favorites(favorites.stream().map(FavoriteResponse::fromFavorite).toList())
                 .description(product.getDescription())
                 .categoryId(product.getCategory().getId())

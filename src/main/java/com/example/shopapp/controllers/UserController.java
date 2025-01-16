@@ -77,7 +77,7 @@ public class UserController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int limit
     ) throws Exception{
-        // Tạo Pageable từ thông tin trang và giới hạn
+
         PageRequest pageRequest = PageRequest.of(
                 page, limit,
                 //Sort.by("createdAt").descending()
@@ -86,7 +86,6 @@ public class UserController {
         Page<UserResponse> userPage = userService.findAll(keyword, pageRequest)
                 .map(UserResponse::fromUser);
 
-        // Lấy tổng số trang
         int totalPages = userPage.getTotalPages();
         List<UserResponse> userResponses = userPage.getContent();
         UserListResponse userListResponse = UserListResponse
@@ -101,7 +100,7 @@ public class UserController {
                 .build());
     }
     @PostMapping("/register")
-    //can we register an "admin" user ?
+
     public ResponseEntity<ResponseObject> createUser(
             @Valid @RequestBody UserDTO userDTO,
             BindingResult result
@@ -126,13 +125,11 @@ public class UserController {
                         .message("At least email or phone number is required")
                         .build());
             } else {
-                //phone number not blank
                 if (!ValidationUtils.isValidPhoneNumber(userDTO.getPhoneNumber())) {
                     throw new Exception("Invalid phone number");
                 }
             }
         } else {
-            //Email not blank
             if (!ValidationUtils.isValidEmail(userDTO.getEmail())) {
                 throw new Exception("Invalid email format");
             }
@@ -159,7 +156,6 @@ public class UserController {
             @Valid @RequestBody UserLoginDTO userLoginDTO,
             HttpServletRequest request
     ) throws Exception {
-        // Kiểm tra thông tin đăng nhập và sinh token
         String token = userService.login(userLoginDTO);
         String userAgent = request.getHeader("User-Agent");
         User userDetail = userService.getUserDetailsFromToken(token);
@@ -171,8 +167,7 @@ public class UserController {
                 .tokenType(jwtToken.getTokenType())
                 .refreshToken(jwtToken.getRefreshToken())
                 .username(userDetail.getUsername())
-                //.roles(userDetail.getAuthorities().stream().map(item -> item.getAuthority()).toList())
-                .roles(userDetail.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList()) //method reference
+                .roles(userDetail.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
                 .id(userDetail.getId())
                 .build();
         return ResponseEntity.ok().body(ResponseObject.builder()
@@ -204,16 +199,15 @@ public class UserController {
 
     }
     private boolean isMobileDevice(String userAgent) {
-        // Kiểm tra User-Agent header để xác định thiết bị di động
-        // Ví dụ đơn giản:
         return userAgent.toLowerCase().contains("mobile");
     }
+    
     @PostMapping("/details")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> getUserDetails(
             @RequestHeader("Authorization") String authorizationHeader
     ) throws Exception {
-        String extractedToken = authorizationHeader.substring(7); // Loại bỏ "Bearer " từ chuỗi token
+        String extractedToken = authorizationHeader.substring(7);
         User user = userService.getUserDetailsFromToken(extractedToken);
         return ResponseEntity.ok().body(
                 ResponseObject.builder()
@@ -223,6 +217,7 @@ public class UserController {
                         .build()
         );
     }
+    
     @PutMapping("/details/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
@@ -233,7 +228,6 @@ public class UserController {
     ) throws Exception{
         String extractedToken = authorizationHeader.substring(7);
         User user = userService.getUserDetailsFromToken(extractedToken);
-        // Ensure that the user making the request matches the user being updated
         if (user.getId() != userId) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -246,11 +240,12 @@ public class UserController {
                         .build()
         );
     }
+    
     @PutMapping("/reset-password/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseObject> resetPassword(@Valid @PathVariable long userId){
         try {
-            String newPassword = UUID.randomUUID().toString().substring(0, 5); // Tạo mật khẩu mới
+            String newPassword = UUID.randomUUID().toString().substring(0, 5);
             userService.resetPassword(userId, newPassword);
             return ResponseEntity.ok(ResponseObject.builder()
                             .message("Reset password successfully")
@@ -271,6 +266,7 @@ public class UserController {
                     .build());
         }
     }
+    
     @PutMapping("/block/{userId}/{active}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseObject> blockOrEnable(
@@ -300,7 +296,7 @@ public class UserController {
             );
         }
 
-        if (file.getSize() > 10 * 1024 * 1024) { // 10MB
+        if (file.getSize() > 10 * 1024 * 1024) {
             return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
                     .body(ResponseObject.builder()
                             .message("Image file size exceeds the allowed limit of 10MB.")
@@ -308,7 +304,6 @@ public class UserController {
                             .build());
         }
 
-        // Check file type
         if (!FileUtils.isImageFile(file)) {
             return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
                     .body(ResponseObject.builder()
@@ -317,22 +312,21 @@ public class UserController {
                             .build());
         }
 
-        // Store file and get filename
         String oldFileName = loginUser.getProfileImage();
         String imageName = FileUtils.storeFile(file);
 
         userService.changeProfileImage(loginUser.getId(), imageName);
-        // Delete old file if exists
         if (!StringUtils.isEmpty(oldFileName)) {
             FileUtils.deleteFile(oldFileName);
         }
-//1aba82e1-4599-4c8b-8ec5-9c16e5aad379_3734888057500.png
+        
         return ResponseEntity.ok().body(ResponseObject.builder()
                 .message("Upload profile image successfully")
                 .status(HttpStatus.CREATED)
-                .data(imageName) // Return the filename or image URL
+                .data(imageName)
                 .build());
     }
+    
     @GetMapping("/profile-images/{imageName}")
     public ResponseEntity<?> viewImage(@PathVariable String imageName) {
         try {
@@ -347,19 +341,15 @@ public class UserController {
                 return ResponseEntity.ok()
                         .contentType(MediaType.IMAGE_JPEG)
                         .body(new UrlResource(Paths.get("uploads/default-profile-image.jpeg").toUri()));
-                //return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-
-    //Angular, bấm đăng nhập gg, redirect đến trang đăng nhập google, đăng nhập xong có "code"
-    //Từ "code" => google token => lấy ra các thông tin khác
     @GetMapping("/auth/social-login")
     public ResponseEntity<String> socialAuth(@RequestParam("login_type") String loginType){
-        loginType = loginType.trim().toLowerCase();  // Loại bỏ dấu cách và chuyển thành chữ thường
+        loginType = loginType.trim().toLowerCase();
         String url = authService.generateAuthUrl(loginType);
         return ResponseEntity.ok(url);
     }
@@ -370,7 +360,7 @@ public class UserController {
             @RequestParam("login_type") String loginType,            
             HttpServletRequest request
             ) throws Exception {
-        // Call the AuthService to get user info
+
         Map<String, Object> userInfo = authService.authenticateAndFetchProfile(code, loginType);
 
         if (userInfo == null) {
@@ -379,7 +369,6 @@ public class UserController {
             ));
         }
 
-        // Extract user information from userInfo map
         String googleAccountId = (String) Objects.requireNonNullElse(userInfo.get("sub"), "");
         String name = (String) Objects.requireNonNullElse(userInfo.get("name"), "");
         String givenName = (String) Objects.requireNonNullElse(userInfo.get("given_name"), "");

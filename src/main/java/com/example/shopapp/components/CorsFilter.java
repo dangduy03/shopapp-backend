@@ -10,7 +10,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-//định nghĩa một bean và đồng thời chỉ định một tên cụ thể cho bean đó
 @Component("customCorsFilter")
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter extends OncePerRequestFilter {
