@@ -16,6 +16,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserLoginDTO extends SocialAccountDTO {
 	
+	@JsonProperty("phoneNumberOrEmail")
+	private String phoneNumberOrEmail;
+	
     @JsonProperty("phone_number")
     private String phoneNumber;
 
