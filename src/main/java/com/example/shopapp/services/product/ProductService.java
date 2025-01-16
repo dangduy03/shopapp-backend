@@ -81,7 +81,6 @@ public class ProductService implements IProductService{
     public Page<ProductResponse> getAllProducts(String keyword,
                                                 Long categoryId, 
                                                 PageRequest pageRequest) {
-        // Lấy danh sách sản phẩm theo trang (page), giới hạn (limit), và categoryId (nếu có)
         Page<Product> productsPage;
         productsPage = productRepository.searchProducts(keyword, categoryId, pageRequest);
         return productsPage.map(ProductResponse::fromProduct);
@@ -96,8 +95,6 @@ public class ProductService implements IProductService{
             throws Exception {
         Product existingProduct = getProductById(id);
         if(existingProduct != null) {
-            //copy các thuộc tính từ DTO -> Product
-            //Có thể sử dụng ModelMapper
             Category existingCategory = categoryRepository
                     .findById(productDTO.getCategoryId())
                     .orElseThrow(() ->
@@ -154,7 +151,6 @@ public class ProductService implements IProductService{
                 .imageUrl(productImageDTO.getImageUrl())
                 .build();
         
-        //Ko cho insert quá 5 ảnh cho 1 sản phẩm
         int size = productImageRepository.findByProductId(productId).size();
         
         if(size >= ProductImage.MAXIMUM_IMAGES_PER_PRODUCT) {
@@ -171,39 +167,31 @@ public class ProductService implements IProductService{
         return productImageRepository.save(newProductImage);
     }
 
-
     @Override
     @Transactional
     public Product likeProduct(Long userId, Long productId) throws Exception {
-        // Check if the user and product exist
         if (!userRepository.existsById(userId) || !productRepository.existsById(productId)) {
             throw new DataNotFoundException("User or product not found");
         }
 
-        // Check if the user has already liked the product
         if (favoriteRepository.existsByUserIdAndProductId(userId, productId)) {
-            //throw new DataNotFoundException("Product already liked by the user");
         } else {
-            // Create a new favorite entry and save it
             Favorite favorite = Favorite.builder()
                     .product(productRepository.findById(productId).orElse(null))
                     .user(userRepository.findById(userId).orElse(null))
                     .build();
             favoriteRepository.save(favorite);
         }
-        // Return the liked product
         return productRepository.findById(productId).orElse(null);
     }
     
     @Override
     @Transactional
     public Product unlikeProduct(Long userId, Long productId) throws Exception {
-        // Check if the user and product exist
         if (!userRepository.existsById(userId) || !productRepository.existsById(productId)) {
             throw new DataNotFoundException("User or product not found");
         }
 
-        // Check if the user has already liked the product
         if (favoriteRepository.existsByUserIdAndProductId(userId, productId)) {
             Favorite favorite = favoriteRepository.findByUserIdAndProductId(userId, productId);
             favoriteRepository.delete(favorite);
@@ -214,39 +202,35 @@ public class ProductService implements IProductService{
     @Override
     @Transactional
     public List<ProductResponse> findFavoriteProductsByUserId(Long userId) throws Exception {
-        // Validate the userId
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isEmpty()) {
             throw new Exception("User not found with ID: " + userId);
         }
-        // Retrieve favorite products for the given userId
+
         List<Product> favoriteProducts = productRepository.findFavoriteProductsByUserId(userId);
-        // Convert Product entities to ProductResponse objects
+
         return favoriteProducts.stream()
                 .map(ProductResponse::fromProduct)
                 .collect(Collectors.toList());
     }
     
     @Override
-    //@Transactional
+    @Transactional
     public void generateFakeLikes() throws Exception {
         Faker faker = new Faker();
         Random random = new Random();
 
-        // Get all users with roleId = 1
         List<User> users = userRepository.findByRoleId(1L);
-        // Get all products
         List<Product> products = productRepository.findAll();
         final int totalRecords = 1_000;
         final int batchSize = 100;
         List<Favorite> favorites = new ArrayList<>();
         for (int i = 0; i < totalRecords; i++) {
-            // Select a random user and product
+
             User user = users.get(random.nextInt(users.size()));
             Product product = products.get(random.nextInt(products.size()));
 
             if(!favoriteRepository.existsByUserIdAndProductId(user.getId(), product.getId())) {
-                // Generate a fake favorite
                 Favorite favorite = Favorite.builder()
                         .user(user)
                         .product(product)

@@ -28,8 +28,7 @@ public class LoginResponse {
     private String refreshToken;
     
     private String tokenType = "Bearer";
-    
-    //user's detail
+
     private Long id;
     
     private String username;

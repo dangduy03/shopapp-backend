@@ -38,7 +38,6 @@ public class CouponService implements ICouponService{
         double discount = 0.0;
         double updatedTotalAmount = totalAmount;
         for (CouponCondition condition : conditions) {
-            //EAV(Entity - Attribute - Value) Model
             String attribute = condition.getAttribute();
             String operator = condition.getOperator();
             String value = condition.getValue();
@@ -58,7 +57,6 @@ public class CouponService implements ICouponService{
                     discount += updatedTotalAmount * percentDiscount / 100;
                 }
             }
-            //còn nhiều nhiều điều kiện khác nữa
             updatedTotalAmount = updatedTotalAmount - discount;
         }
         return discount;

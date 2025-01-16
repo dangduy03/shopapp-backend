@@ -1,8 +1,5 @@
 package com.example.shopapp.services.auth;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -12,7 +9,6 @@ import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -48,7 +44,7 @@ public class AuthService implements IAuthService{
 
     public String generateAuthUrl(String loginType) {
         String url = "";
-        loginType = loginType.trim().toLowerCase(); // Normalize the login type
+        loginType = loginType.trim().toLowerCase();
 
         if ("google".equals(loginType)) {
             GoogleAuthorizationCodeRequestUrl urlBuilder = new GoogleAuthorizationCodeRequestUrl(
@@ -89,14 +85,10 @@ public class AuthService implements IAuthService{
                         code,
                         googleRedirectUri
                 ).execute().getAccessToken();
-
-                // Set the URL for the Google API to fetch user info
                 url = "https://www.googleapis.com/oauth2/v3/userinfo";
-
                 break;
 
             case "facebook":
-                // Facebook token request setup
                 url = UriComponentsBuilder
                         .fromUriString("https://graph.facebook.com/v20.0/oauth/access_token")
                         .queryParam("client_id", facebookClientId)
@@ -105,11 +97,9 @@ public class AuthService implements IAuthService{
                         .queryParam("code", code)
                         .toUriString();
 
-                // Use RestTemplate to fetch the Facebook access token
                 Map<String, Object> response = gson.fromJson(restTemplate.getForObject(url, String.class), Map.class);
                 accessToken = (String) response.get("access_token");
 
-                // Set the URL for the Facebook API to fetch user info
                 url = "https://graph.facebook.com/me?fields=id,name,first_name,last_name,email,picture{url}";
                 break;
 
@@ -118,13 +108,11 @@ public class AuthService implements IAuthService{
                 return null;
         }
 
-        // Configure RestTemplate to include the access token in the Authorization header
         restTemplate.getInterceptors().add((req, body, executionContext) -> {
             req.getHeaders().set("Authorization", "Bearer " + accessToken);
             return executionContext.execute(req, body);
         });
 
-        // Make a GET request to fetch user information
         String userInfoResponse = restTemplate.getForObject(url, String.class);
         return gson.fromJson(userInfoResponse, Map.class);
     }

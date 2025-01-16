@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.shopapp.responses.ResponseObject;
 
-@RestControllerAdvice // Chỉ định lớp này xử lý ngoại lệ chung
+@RestControllerAdvice 
 public class GlobalExceptionHandler {
 	
     @ExceptionHandler(Exception.class)

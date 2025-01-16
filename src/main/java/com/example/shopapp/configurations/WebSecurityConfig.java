@@ -45,12 +45,9 @@ public class WebSecurityConfig {
                                     String.format("%s/users/register", apiPrefix),
                                     String.format("%s/users/login", apiPrefix),
                                     
-                                    //healthcheck
                                     String.format("%s/healthcheck/**", apiPrefix),
-                                    
-                                    //swagger
-                                    //"/v3/api-docs",
-                                    //"/v3/api-docs/**",
+                                    String.format("%s/excel/**", apiPrefix),
+                                   
                                     "/api-docs",
                                     "/api-docs/**",
                                     "/swagger-resources",
@@ -62,7 +59,6 @@ public class WebSecurityConfig {
                                     "/webjars/swagger-ui/**",
                                     "/swagger-ui/index.html",
                                     
-                                    //Google login
                                     "users/auth/social-login",
                                     "users/auth/social/callback",
                                     "actuator/health"
@@ -98,6 +94,9 @@ public class WebSecurityConfig {
                             
                             .requestMatchers(GET,
                                     String.format ("%s/actuator/**", apiPrefix)).permitAll()
+                            
+                            .requestMatchers(GET,
+                                    String.format ("%s/excel/**", apiPrefix)).permitAll()
                             
                             .requestMatchers("/api/v1/**").authenticated()
                             .anyRequest().permitAll();

@@ -47,6 +47,5 @@ public class UserDTO extends SocialAccountDTO {
 
     @NotNull(message = "Role ID is required")
     @JsonProperty("role_id")
-    //role admin not permitted
     private Long roleId;
 }

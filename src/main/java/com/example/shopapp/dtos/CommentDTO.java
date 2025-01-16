@@ -3,7 +3,7 @@ package com.example.shopapp.dtos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-@Data//toString
+@Data
 @Getter
 @Setter
 @AllArgsConstructor

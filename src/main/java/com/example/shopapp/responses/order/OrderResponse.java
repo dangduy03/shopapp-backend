@@ -91,7 +91,7 @@ public class OrderResponse {
                 .shippingAddress(order.getShippingAddress())
                 .shippingDate(order.getShippingDate())
                 .paymentMethod(order.getPaymentMethod())
-                .orderDetails(orderDetailResponses) //important
+                .orderDetails(orderDetailResponses)
                 .build();
         return orderResponse;
     }

@@ -18,11 +18,8 @@ public class CustomHealthCheck implements HealthIndicator {
 
 	@Override
 	public Health health() {
-		// Implement your custom health check logic here
 		try {
 			Map<String, Object> details = new HashMap<>();
-			// DOWN => 503
-			// Healthcheck for Kafka
 			String clusterId = kafkaAdmin.clusterId();
 			
 			if (clusterId.isEmpty()) {

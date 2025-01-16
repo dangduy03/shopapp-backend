@@ -37,11 +37,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-/*
-ALTER TABLE users
-  MODIFY facebook_account_id VARCHAR(255),
-  MODIFY google_account_id VARCHAR(255);
-* */
+
 public class User extends BaseEntity implements UserDetails, OAuth2User {
 	
     @Id
@@ -54,14 +50,12 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
     @Column(name = "phone_number", length = 10, nullable = true)
     private String phoneNumber;
 
-    // ALTER TABLE users ADD COLUMN email VARCHAR(255) DEFAULT '';
     @Column(name = "email", length = 255, nullable = true)
     private String email;
 
     @Column(name = "address", length = 200)
     private String address;
 
-    //ALTER TABLE users ADD COLUMN profile_image VARCHAR(255) DEFAULT '';
     @Column(name = "profile_image", length = 255)
     private String profileImage;
 
@@ -102,7 +96,6 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
         return "";
     }
 
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -122,11 +115,7 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
     public boolean isEnabled() {
         return true;
     }
-    
-    
-    
 
-    //Login facebook
     @Override
     public Map<String, Object> getAttributes() {
         return new HashMap<String, Object>();

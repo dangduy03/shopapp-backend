@@ -19,7 +19,6 @@ public class ProductImageDTO {
 	@Min(value = 1, message = "Product's ID must be > 0")
     private Long productId;
 	
-	
 	@Size(min = 5, max =300, message = "Image's name")
 	@JsonProperty("image_url")
 	private String imageUrl;

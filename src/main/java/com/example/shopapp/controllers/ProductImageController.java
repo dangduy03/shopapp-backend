@@ -15,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${api.prefix}/product_images")
-//@Validated
-//Dependency Injection
 @RequiredArgsConstructor
 public class ProductImageController {
 	

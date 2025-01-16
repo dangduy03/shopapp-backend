@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
 )
 
 @SecurityScheme(
-        name = "bearer-key", // Can be any name, used to reference this scheme in the @SecurityRequirement annotation
+        name = "bearer-key",
         type = SecuritySchemeType.HTTP,
         scheme = "bearer",
         bearerFormat = "JWT",

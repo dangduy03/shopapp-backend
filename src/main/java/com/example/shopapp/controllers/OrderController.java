@@ -72,8 +72,7 @@ public class OrderController {
                         .build());
     }
     
-    @GetMapping("/user/{user_id}") // Thêm biến đường dẫn "user_id"
-    //GET http://localhost:8088/api/v1/orders/user/4
+    @GetMapping("/user/{user_id}")
     public ResponseEntity<ResponseObject> getOrders(@Valid @PathVariable("user_id") Long userId) {
         User loginUser = securityUtils.getLoggedInUser();
         boolean isUserIdBlank = userId == null || userId <= 0;
@@ -86,7 +85,6 @@ public class OrderController {
                         .build());
     }
     
-    //GET http://localhost:8088/api/v1/orders/2
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getOrder(@Valid @PathVariable("id") Long orderId) {
         Order existingOrder = orderService.getOrderById(orderId);
@@ -100,8 +98,6 @@ public class OrderController {
     
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    //PUT http://localhost:8088/api/v1/orders/2
-    //công việc của admin
     public ResponseEntity<ResponseObject> updateOrder(
             @Valid @PathVariable long id,
             @Valid @RequestBody OrderDTO orderDTO) throws Exception {
@@ -115,7 +111,6 @@ public class OrderController {
     public ResponseEntity<ResponseObject> cancelOrder(
             @Valid @PathVariable long id) throws Exception {
         Order order = orderService.getOrderById(id);
-        // Kiểm tra xem người dùng hiện tại có phải là người đã đặt đơn hàng hay không
         User loginUser = securityUtils.getLoggedInUser();
         if (loginUser.getId() != order.getUser().getId()) {
             return ResponseEntity.badRequest().body(ResponseObject.builder()
@@ -160,7 +155,6 @@ public class OrderController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseObject> deleteOrder(@Valid @PathVariable Long id) {
-        //xóa mềm => cập nhật trường active = false
         orderService.deleteOrder(id);
         String message = localizationUtils.getLocalizedMessage(
                 MessageKeys.DELETE_ORDER_SUCCESSFULLY, id);
@@ -177,7 +171,6 @@ public class OrderController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int limit
     ) {
-        // Tạo Pageable từ thông tin trang và giới hạn
         PageRequest pageRequest = PageRequest.of(
                 page, limit,
                 //Sort.by("createdAt").descending()
@@ -186,7 +179,6 @@ public class OrderController {
         Page<OrderResponse> orderPage = orderService
                                         .getOrdersByKeyword(keyword, pageRequest)
                                         .map(OrderResponse::fromOrder);
-        // Lấy tổng số trang
         int totalPages = orderPage.getTotalPages();
         List<OrderResponse> orderResponses = orderPage.getContent();
         return ResponseEntity.ok().body(ResponseObject.builder()

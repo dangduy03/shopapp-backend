@@ -22,7 +22,6 @@ public abstract class SocialAccountDTO {
         return googleAccountId != null && !googleAccountId.isEmpty();
     }
 
-    // Phương thức kiểm tra xem người dùng có phải là người dùng đăng nhập xã hội hay không
     public boolean isSocialLogin() {
         return (facebookAccountId != null && !facebookAccountId.isEmpty()) ||
                 (googleAccountId != null && !googleAccountId.isEmpty());
