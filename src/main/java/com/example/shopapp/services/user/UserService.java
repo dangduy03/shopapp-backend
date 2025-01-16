@@ -139,15 +139,9 @@ public class UserService implements IUserService{
                 optionalUser = Optional.of(newUser);
             }
         }
-
-        if (userLoginDTO.getPhoneNumber() != null && !userLoginDTO.getPhoneNumber().isBlank()) {
-            optionalUser = userRepository.findByPhoneNumber(userLoginDTO.getPhoneNumber());
-            subject = userLoginDTO.getPhoneNumber();
-        }
-
-        if (optionalUser.isEmpty() && userLoginDTO.getEmail() != null) {
-            optionalUser = userRepository.findByEmail(userLoginDTO.getEmail());
-            subject = userLoginDTO.getEmail();
+        if(userLoginDTO.getPhoneNumberOrEmail() != null && !userLoginDTO.getPhoneNumberOrEmail().isBlank()) {
+        	optionalUser = userRepository.findByPhoneNumberOrEmail(userLoginDTO.getPhoneNumberOrEmail(),userLoginDTO.getPhoneNumberOrEmail());
+        	subject = userLoginDTO.getPhoneNumberOrEmail();
         }
 
         if (optionalUser.isEmpty()) {

@@ -19,6 +19,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     Optional<User> findByPhoneNumber(String phoneNumber);
     
+    Optional<User> findByPhoneNumberOrEmail(String phoneNumber,String email);
+    
     Optional<User> findByEmail(String email);
 
     @Query("SELECT o FROM User o WHERE o.active = true AND (:keyword IS NULL OR :keyword = '' OR " +
