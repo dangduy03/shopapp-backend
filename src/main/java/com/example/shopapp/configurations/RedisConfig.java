@@ -27,12 +27,20 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.port}") // Read 'spring.data.redis.port' property from application.yml
     private int redisPort;
+    
+    @Value("${spring.data.redis.password}")
+    private String redisPassword;
+    
+    @Value("${spring.data.redis.username}")
+    private String redisUsername;
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
         logger.info(String.format("redisHost = %s, redisPort = %d", redisHost, redisPort));
         RedisStandaloneConfiguration configuration =
                 new RedisStandaloneConfiguration(redisHost, redisPort);
+        configuration.setPassword(redisPassword);
+        configuration.setUsername(redisUsername);
         return new LettuceConnectionFactory(configuration);
     }
     

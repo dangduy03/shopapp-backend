@@ -6,14 +6,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
+//import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.shopapp.components.LocalizationUtils;
-import com.example.shopapp.components.converters.CategoryMessageConverter;
+//import com.example.shopapp.components.converters.CategoryMessageConverter;
 import com.example.shopapp.dtos.CategoryDTO;
 import com.example.shopapp.models.Category;
 import com.example.shopapp.responses.ResponseObject;
@@ -29,7 +29,7 @@ public class CategoryController {
     
     private final LocalizationUtils localizationUtils;
     
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+//    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @PostMapping("")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -49,8 +49,8 @@ public class CategoryController {
 
         }
         Category category = categoryService.createCategory(categoryDTO);
-        this.kafkaTemplate.send("insert-a-category", category);
-        this.kafkaTemplate.setMessageConverter(new CategoryMessageConverter());
+//        this.kafkaTemplate.send("insert-a-category", category);
+//        this.kafkaTemplate.setMessageConverter(new CategoryMessageConverter());
         return ResponseEntity.ok().body(ResponseObject.builder()
                 .message("Create category successfully")
                 .status(HttpStatus.OK)
@@ -65,7 +65,7 @@ public class CategoryController {
     ) {
         List<Category> categories = categoryService.getAllCategories();
 
-        this.kafkaTemplate.send("get-all-categories", categories);
+//        this.kafkaTemplate.send("get-all-categories", categories);
         return ResponseEntity.ok(ResponseObject.builder()
                         .message("Get list of categories successfully")
                         .status(HttpStatus.OK)
