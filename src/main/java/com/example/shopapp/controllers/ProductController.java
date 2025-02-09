@@ -158,6 +158,18 @@ public class ProductController {
                 .data(productListResponse)
                 .build());
     }
+    
+    //them
+    @GetMapping("/getProductByHomePage")
+    public ResponseEntity<ResponseObject> getProductsForHomePage() 
+    		throws Exception{
+    	List<List<Product>> result = productService.getProductForHomePage();
+    	return ResponseEntity.ok().body(ResponseObject.builder()
+    												.message("Get products successfully")
+    												.status(HttpStatus.OK)
+    												.data(result)
+    												.build());
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getProductById(

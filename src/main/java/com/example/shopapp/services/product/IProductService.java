@@ -38,5 +38,7 @@ public interface IProductService {
     
     List<ProductResponse> findFavoriteProductsByUserId(Long userId) throws Exception;
     
+    List<List<Product>> getProductForHomePage() throws Exception;
+    
     void generateFakeLikes() throws Exception;
 }
