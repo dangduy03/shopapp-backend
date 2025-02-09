@@ -38,4 +38,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p JOIN p.favorites f WHERE f.user.id = :userId")
     List<Product> findFavoriteProductsByUserId(@Param("userId") Long userId);
 
+    List<Product> findTop9ByOrderByCreatedAtAsc();
+    
+    List<Product> findTop9ByOrderByCreatedAtDesc();
+    
+    @Query(value = "SELECT * FROM products ORDER BY RAND() LIMIT 9", nativeQuery = true)
+    List<Product> findRandomProducts();
 }

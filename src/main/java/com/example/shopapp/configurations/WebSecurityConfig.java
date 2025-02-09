@@ -13,12 +13,17 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.example.shopapp.filters.JwtTokenFilter;
 
 import lombok.RequiredArgsConstructor;
 import static org.springframework.http.HttpMethod.*;
+
+import java.util.Arrays;
 
 @Configuration
 //@EnableMethodSecurity
@@ -102,6 +107,7 @@ public class WebSecurityConfig {
                             .anyRequest().permitAll();
                 })
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors().disable()
                 .oauth2Login(Customizer.withDefaults())
                 .oauth2ResourceServer(c -> c.opaqueToken(Customizer.withDefaults())
                 );

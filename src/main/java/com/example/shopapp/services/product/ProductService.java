@@ -1,6 +1,7 @@
 package com.example.shopapp.services.product;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -243,4 +244,16 @@ public class ProductService implements IProductService{
             }
         }
     }
+
+	@Override
+	public List<List<Product>> getProductForHomePage() {
+		// TODO Auto-generated method stub
+		List<Product> newestProducts = productRepository.findTop9ByOrderByCreatedAtAsc();
+		List<Product> lateProducts = productRepository.findTop9ByOrderByCreatedAtDesc();
+		List<Product> randomProduct = productRepository.findRandomProducts();
+		
+		List<List<Product>> result = Arrays.asList(newestProducts,lateProducts,randomProduct);
+		
+		return result;
+	}
 }

@@ -90,7 +90,7 @@ public class JwtTokenFilter extends OncePerRequestFilter{
                 Pair.of(String.format("%s/comments**", apiPrefix), "GET"),
                 Pair.of(String.format("%s/coupons**", apiPrefix), "GET"),
 
-                Pair.of(String.format("%s/products*", apiPrefix), "GET"),
+                Pair.of(String.format("%s/products**", apiPrefix), "GET"),
                 Pair.of(String.format("%s/categories**", apiPrefix), "GET"),
 
                 Pair.of(String.format("%s/users/register", apiPrefix), "POST"),
@@ -125,9 +125,11 @@ public class JwtTokenFilter extends OncePerRequestFilter{
             String method = token.getSecond();
             if (requestPath.matches(path.replace("**", ".*"))
                     && requestMethod.equalsIgnoreCase(method)) {
+        System.out.print("it passed!!!");
                 return true;
             }
         }
+        System.out.println("Its not");
         return false;
     }
 	
